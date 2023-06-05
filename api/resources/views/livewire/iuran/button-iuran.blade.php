@@ -1,0 +1,1 @@
+<a href="javascript:void(0)" wire:click="$emit('modal-insert-iuran')" class="btn btn-primary mx-2"><i class="fa fa-plus"></i> Iuran</a>

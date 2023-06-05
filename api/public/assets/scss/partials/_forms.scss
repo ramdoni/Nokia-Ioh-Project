@@ -1,0 +1,374 @@
+/* Forms */
+
+label {
+	font-weight: 600;
+}
+
+.search-form {
+	position: relative;
+	@extend .padding-0;
+
+	.btn {
+		@include box-shadow(none);
+
+		position: absolute;
+		top: 10px;
+		right: 15px;
+		@extend .padding-0;
+		border: none;
+		color: $grey-500;
+		background-color: transparent;
+
+		&:hover,
+		&:focus {
+			background-color: inherit;
+			border-left: none;
+			border-color: inherit;
+		}
+	}
+}
+
+/* fancy checkbox and radio button */
+.fancy-checkbox {
+	margin-right: 10px;
+
+	&,
+	label {
+		font-weight: normal;
+	}
+
+	input[type="checkbox"] {
+		display: none;
+		
+		+ span {
+			@include inline-block;
+
+			cursor: pointer;
+			position: relative;
+
+			&:before {
+				@include inline-block;
+
+				position: relative;
+				bottom: 1px;
+				width: 24px;
+				height: 24px;
+				margin-right: 10px;
+				content: "";
+				border: 1px solid #ccc;
+				border-radius: 3px;
+			}
+		}
+        
+        &:checked + span:before {
+			font-family: FontAwesome;
+			content: '\f00c';
+			font-size: 10px;
+			color: $col-white;
+			text-align: center;
+            line-height: 21px;            
+		}
+	}
+
+	&.custom-color-green input[type="checkbox"] {
+		&:checked + span:before {
+			color: $color-success;
+			background-color: $col-white;
+		}
+	}
+
+	&.custom-bgcolor-green input[type="checkbox"] {
+		&:checked + span:before {
+			color: $col-white;
+			background-color: $color-success;
+			border-color: darken($color-success, 8%);
+		}
+	}
+}
+
+.fancy-radio {
+	margin-right: 10px;
+
+	&,
+	label {
+		font-weight: normal;
+	}
+
+	input[type="radio"] {
+		display: none;
+		
+		+ span {
+			display: block;
+			cursor: pointer;
+			position: relative;
+
+			i {
+				@include inline-block;
+				@include border-radius(8px);
+
+				position: relative;
+				bottom: 1px;
+				content: "";
+				border: 1px solid #ccc;
+				width: 18px;
+				height: 18px;
+				margin-right: 5px;
+			}
+		}
+
+		&:checked + span i:after {
+			@include border-radius(50%);
+
+			display: block;
+			position: relative;
+			top: 3px;
+			left: 3px;
+			content: '';
+			width: 10px;
+			height: 10px;
+			background-color: #7b848c;
+		} 
+	}
+
+	&.custom-color-green input[type="radio"] {
+		&:checked + span i:after {
+			background-color: #53D76A;
+		}
+	}
+
+	&.custom-bgcolor-green input[type="radio"] {
+		&:checked + span i {
+			background-color: #53D76A;
+			
+			&:after {
+				background-color: $col-white;
+			} 
+		}
+	}
+}
+
+/* fancy checkbox and fancy radio */
+.input-group-addon {
+	.fancy-radio,
+	.fancy-checkbox {
+		margin: 0;
+		position: relative;
+		top: 1px;
+	}
+
+	.fancy-radio input[type="radio"] + span i,
+	.fancy-checkbox input[type="checkbox"] + span {
+		margin: 0;
+
+		&:before {
+			margin: 0;
+		}
+	}
+}
+
+.form-control {
+	@include box-shadow(none);	
+	background-color: $col-white;
+	font-size: $font-size;	
+
+	&:focus {
+		@include box-shadow(none);
+		outline: none;
+		border-color: darken(#dadada, 10%);
+	}
+}
+
+.help-block {
+	font-size: 13px;
+	color: #929292;
+}
+
+/* multiselect checkbox */
+.multiselect-custom + .btn-group ul.multiselect-container {
+	> li {
+		> a {
+            padding: 5px 15px;
+            display: block;
+            outline: none;
+
+			label.checkbox {
+                padding: 0;
+                font-size: 14px;
+
+				&:before {
+					@include inline-block;
+
+					position: relative;
+					bottom: 1px;
+					content: "";
+					width: 16px;
+					height: 16px;
+					margin-right: 10px;
+					border: 1px solid #ccc;
+					background-color: #fafafa;
+				}
+
+				input[type="checkbox"] {
+					display: none;
+				}
+			}
+		}
+
+		&.active > a {
+			label.checkbox:before {
+				font-family: FontAwesome;
+				content: '\f00c';
+				font-size: 12px;
+				color: #99A1A7;
+				text-align: center;
+				line-height: 15px;
+				background-color: $grey-200;
+			}
+        }
+        &.active{
+            .checkbox{
+                color: $col-white;                
+            }
+        }
+        &:hover{
+            background-color: $grey-100;
+        }
+	}
+}
+
+/* multiselect radio */
+.multiselect-custom + .btn-group ul.multiselect-container {
+	> li {
+		> a {
+            padding: 5px 15px;
+            display: block;
+            outline: none;
+
+			label.radio {				
+                padding: 0;
+
+				&:before {
+					@include inline-block;
+					@include border-radius(8px);
+
+					position: relative;
+					bottom: 1px;
+					content: "";
+					width: 16px;
+					height: 16px;
+					margin-right: 10px;
+					border: 1px solid #ccc;
+					background-color: #fafafa;
+				}
+
+				input[type="radio"] {
+					display: none;
+				}
+			}
+		}
+
+		&.active > a {
+			label.radio:before {
+				font-family: FontAwesome;
+				content: '\f111';
+				color: #99a1a7;
+				font-size: 8px;
+				text-align: center;
+				line-height: 15px;
+			}
+        }
+
+        &.active{
+            .radio{
+                color: $col-white;                
+            }
+        }
+        
+        &:hover{
+            background-color: $grey-100;
+        }
+	}
+}
+
+.multiselect-search {
+	@include border-right-radius(2px !important);
+}
+
+.btn.multiselect-clear-filter {
+	@include box-shadow(none);
+
+	position: absolute;
+	top: 2px;
+	right: 0;
+	padding-left: 0;
+	padding-right: 0;
+	border: none;
+	background: transparent;
+	z-index: 9 !important;
+	outline: none;
+
+	&:hover,
+	&:focus {
+		background: transparent;
+		outline: none;
+	}
+}
+
+/* date picker */
+.datepicker table tr td.active {
+	&.active,
+	&.highlighted.active,
+	&.highlighted:active,
+	&.active:active {
+		background-color: $color-accent;
+		border-color: darken($color-accent, 8%);
+	}
+}
+
+/* parsley js */
+.parsley-errors-list {
+	margin-top: 8px;
+	
+	li {
+		color: $color-danger;
+		font-size: 0.9em;
+		margin-top: 3px;
+	}
+}
+
+input.parsley-error, 
+select.parsley-error, 
+textarea.parsley-error {
+	background-color: #fbf5f5;
+	border-color: darken(#fbf5f5, 8%);
+}
+
+.form-control {
+	&.parsley-error:focus {
+		border-color: darken(#fbf5f5, 18%);
+	}
+
+	&.parsley-success:focus {
+		border-color: darken(#DFF0D8, 16%);
+	}
+}
+
+.md-editor > textarea {
+	padding: 10px;
+}
+
+.dropify-wrapper {
+	@include border-radius(3px);
+
+	background-color: #f9f9f9;
+	color: #b9b9b9;
+	border: 1px solid #e4e4e4;
+
+	.dropify-preview {
+		background-color: #f9f9f9;
+	}
+}
+
+select.form-control:not([size]):not([multiple]){height: 36px;}
+
+

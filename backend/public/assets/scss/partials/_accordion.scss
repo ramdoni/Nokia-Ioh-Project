@@ -1,0 +1,12 @@
+.accordion{
+	.card-header{
+        @extend .padding-0;
+        .btn{
+            padding: 10px 20px;
+            width: 100%;
+            @extend .align-left;
+            font-size: 16px;
+            white-space: inherit;
+        }
+	}
+}

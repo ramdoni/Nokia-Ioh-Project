@@ -1,0 +1,318 @@
+﻿.wizard,
+.tabcontrol {
+    @extend .displayblock;
+    width: 100%;
+    overflow: hidden;
+}
+
+.wizard a,
+.tabcontrol a {
+    outline: 0;
+}
+
+.wizard ul,
+.tabcontrol ul {
+    list-style: none !important;
+    @extend .padding-0;
+    @extend .margin-0;
+}
+
+.wizard ul > li, .tabcontrol ul > li {
+    @extend .displayblock;
+    @extend .padding-0;
+}
+/* Accessibility */
+.wizard > .steps .current-info,
+.tabcontrol > .steps .current-info,
+.wizard > .content > .title,
+.tabcontrol > .content > .title {
+    position: absolute;
+    left: -999em;
+}
+
+.wizard {
+
+    > .steps {
+        position: relative;
+        @extend .displayblock;
+        width: 100%;
+    }
+
+    &.vertical {
+        > .steps {
+            float: left;
+            width: 30%;
+            @extend .p-r-5;
+
+            > ul > li {
+                float: none;
+                width: 100%;
+
+                a{
+                    margin: 0 0 2px 0;
+                }
+            }
+        }
+
+        > .content {
+            float: left;
+            margin: 0 0 0.5em 0;
+            width: 70%;
+        }
+
+        > .actions {
+            float: right;
+            width: 100%;
+        }
+        
+    }
+
+    > {
+        .steps {          
+
+            > ul > li {
+                width: 25%;
+                float: left;
+            }
+        }
+
+        .actions > ul > li {
+            float: left;
+        }
+    }
+
+    > {
+        .steps {
+            margin-bottom: 2px;
+
+            a {
+                @extend .displayblock;
+                width: auto;
+                margin: 0 2px 0 0;
+                padding: 1em 1em;
+                text-decoration: none;                
+
+                &:hover, &:active {
+                    @extend .displayblock;
+                    width: auto;
+                    margin: 0 2px 0 0;
+                    padding: 1em 1em;
+                    text-decoration: none;
+                }
+            }
+
+            .disabled a {
+                background: $grey-200;
+                color: $grey-400;
+                cursor: default;
+
+                &:hover, &:active {
+                    background: $grey-200;
+                    color: $grey-400;
+                    cursor: default;
+                }
+            }
+
+            .current a {
+                background: $color-primary;
+                color: $col-white;
+                cursor: default;
+
+                &:hover, &:active {
+                    background: $color-primary;
+                    color: $col-white;
+                    cursor: default;
+                }
+            }
+
+            .done a {
+                background: $color-primary;
+                color: $col-white;
+                opacity: 0.7;
+
+                &:hover, &:active {
+                    background: $color-primary;
+                    color: $col-white;
+                    opacity: 0.7;
+                }
+            }
+
+            .error a {
+                background: $color-danger;
+                color: $col-white;
+
+                &:hover, &:active {
+                    background: $color-danger;
+                    color: $col-white;
+                }
+            }
+        }
+
+        .content {
+            border: 1px solid $grey-200;
+            @extend .displayblock;            
+            min-height: 35em;
+            overflow: hidden;
+            position: relative;
+            width: auto;
+        }
+    }
+
+    > {
+        .actions {
+            position: relative;
+            @extend .displayblock;
+            @extend .align-right;
+            width: 100%;
+        }
+    }   
+
+    > {
+        .actions {
+            @extend .align-right;
+            @extend .m-t-5;
+
+            ul{
+                @extend .inlineblock;
+            }
+
+            a {
+                background: $color-primary;
+                color: $col-white;
+                @extend .displayblock;
+                text-decoration: none;                
+                padding: 8px 20px;
+                border-radius: .25rem;
+                @extend .m-l-5;
+
+                &:hover, &:active {
+                    background: $color-primary;
+                    color: $col-white;
+                    @extend .displayblock;                    
+                    text-decoration: none;                    
+                }
+            }
+
+            .disabled a {
+                background: $grey-200;
+                color: #aaa;
+
+                &:hover, &:active {
+                    background: $grey-200;
+                    color: #aaa;
+                }
+            }
+        }
+    }
+}
+
+.tabcontrol > {
+    .steps {
+        position: relative;
+        @extend .displayblock;
+        width: 100%;
+
+        > ul {
+            position: relative;
+            margin: 6px 0 0 0;
+            top: 1px;
+            z-index: 1;
+
+            > li {
+                float: left;
+                margin: 5px 2px 0 0;
+                padding: 1px;
+                -webkit-border-top-left-radius: 5px;
+                -webkit-border-top-right-radius: 5px;
+                -moz-border-radius-topleft: 5px;
+                -moz-border-radius-topright: 5px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+
+                &:hover {
+                    background: $grey-300;
+                    border: 1px solid $grey-400;
+                    @extend .padding-0;
+                }
+
+                &.current {
+                    background: $col-white;
+                    border: 1px solid $grey-400;
+                    border-bottom: 0 none;
+                    padding: 0 0 1px 0;
+                    @extend .m-t-0;
+
+                    > a {
+                        padding: 15px 30px 10px 30px;
+                    }
+                }
+
+                > a {
+                    color: $grey-800;
+                    @extend .inlineblock;
+                    border: 0 none;
+                    @extend .margin-0;
+                    padding: 10px 30px;
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        position: relative;
+        @extend .inlineblock;
+        width: 100%;
+        height: 35em;
+        overflow: hidden;
+        border-top: 1px solid $grey-400;
+        @extend .p-t-20;
+
+        > .body {
+            float: left;
+            position: absolute;
+            width: 95%;
+            height: 95%;
+            padding: 2.5%;
+
+            ul {
+                list-style: disc !important;
+
+                > li {
+                    display: list-item;
+                }
+            }
+        }
+    }
+}
+
+
+.wizard {
+    .content {
+        min-height: 245px;        
+        overflow-y: auto;
+
+        .body {
+            padding: 15px;
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .wizard {
+        > .steps{
+            > ul > li{
+                width: 100%;
+            }
+        }
+        &.wizard.vertical{
+            >.content, >.steps{
+                width: 100%
+            }
+        }
+    }
+}

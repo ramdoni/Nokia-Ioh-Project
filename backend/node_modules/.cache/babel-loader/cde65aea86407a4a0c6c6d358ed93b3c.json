@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n\nexport default function bind(fn, thisArg) {\n  return function wrap() {\n    return fn.apply(thisArg, arguments);\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

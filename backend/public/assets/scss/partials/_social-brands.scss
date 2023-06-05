@@ -1,0 +1,19 @@
+/* social and brand colors */
+
+/* colored icon */
+@each $social-name, $bg-color in $social-colors {
+	.#{$social-name}-color {
+		color: $bg-color !important;
+	}
+}
+
+/* colored background */
+@each $social-name, $bg-color in $social-colors {
+	.#{$social-name}-bg {
+		background-color: $bg-color !important;
+
+		&:hover, &:focus {
+			background-color: darken($bg-color, 5%) !important;
+		}
+	}
+}

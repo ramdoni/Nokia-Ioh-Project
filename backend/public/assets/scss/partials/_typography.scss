@@ -1,0 +1,57 @@
+/* Typography */
+ul.list-justify {
+	> li {
+		margin-bottom: 5px;
+
+		span,
+		strong {
+			float: right;
+		}
+	}
+
+	&.large-number {
+		> li {
+			margin-bottom: 15px;
+		}
+
+		span {
+			font-size: 32px;
+			line-height: 1;
+		}
+	}
+}
+
+.text-primary {
+	color: $color-accent;
+}
+
+.text-info {
+	color: $color-info;
+}
+
+.text-success {
+	color: $color-success;
+}
+
+.text-warning {
+	color: $color-warning;
+}
+
+.text-danger {
+	color: $color-danger;
+}
+
+.text-muted {
+	color: $color-muted;
+}
+
+.text-larger {
+	font-size: 1.2em;
+}
+
+.text-large {
+	font-size: 1.53em;
+}
+
+
+

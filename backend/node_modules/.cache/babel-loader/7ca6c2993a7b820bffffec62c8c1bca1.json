@@ -1,0 +1,1 @@
+{"ast":null,"code":"import FormData from 'form-data';\nexport default FormData;","map":null,"metadata":{},"sourceType":"module"}

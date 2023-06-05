@@ -1,0 +1,86 @@
+.vertical-align-middle tr th,.vertical-align-middle tr td {vertical-align:middle}
+.theme-blue .page-loader-wrapper{
+    background:#fefefe;
+}
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+    transform: rotate(360deg);
+    }
+}
+.table tr td,.table tr th{
+    padding-top:3px;
+    padding-bottom:3px;
+}
+.table-style1 tr td,
+.table-style1 tr th{
+    padding-top:4px;
+    padding-bottom:4px;
+    font-size:13px;
+}
+.table-nowrap tr td,.table-nowrap tr th{
+    white-space:nowrap !important;
+}
+.select2-selection__placeholder{
+    color:#495057 !important;
+}
+
+.select2-container .select2-selection--single {
+    min-height: 36px;
+    height: auto !important;
+}
+.select2-selection__rendered {
+    white-space: break-spaces !important;
+}
+.badge.badge-success.badge-active {background:#22af46;color:white}
+.badge.badge-danger.badge-active {background:#DE484C;color:white}
+.badge.badge-warning.badge-active {background:#f3ad06;color:white}
+.badge.badge-info.badge-active {background:#3C89DA;color:white}
+.badge.badge-primary.badge-active {background:#007bff;color:white}
+.show-form-filter{
+    position: absolute;
+    transform: translate3d(15px, 35px, 0px);
+    top: 0px;
+    left: 0px;
+    will-change: transform;
+    display: block;
+    width: 250px;
+}
+table#table_postpone thead,
+table#table_approve thead,
+table#table_reject thead{
+    background:#c9eba775
+}
+table#table_postpone thead tr th,
+table#table_approve thead tr th
+{color:#689a37 !important}
+table thead .sub_total {color: orange;font-size: 13px}

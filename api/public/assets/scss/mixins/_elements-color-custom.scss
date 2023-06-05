@@ -1,0 +1,35 @@
+// mixins for elements with custom colors
+
+@mixin icon-transparent-area-variant($color-name, $color-value) {
+	.icon-transparent-area {
+		&.custom-color-#{$color-name} {
+			color: $color-value;
+			background-color: rgba($color-value, .2);
+
+			.badge {
+				background-color: $color-value;
+			}
+		}
+	}
+}
+
+@mixin progress-transparent-variant($color-name, $color-value) {
+	.progress-transparent {
+		&.custom-color-#{$color-name} {
+			background-color: rgba($color-value, .2);
+
+			.progress-bar {
+				background-color: $color-value;
+			}
+		}
+	}
+}
+
+@mixin pagination-button-color($accent-color) {
+	> a:hover, > span:hover,
+	> a:focus, > span:focus {
+		background-color: lighten($accent-color, 8%);
+		border-color: $accent-color;
+		color: #fff;
+	}
+}

@@ -1,0 +1,76 @@
+{
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.3",
+        "barryvdh/laravel-dompdf": "^0.9.0",
+        "doctrine/dbal": "^3.0",
+        "fideloper/proxy": "^4.2",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "iak-id/iak-api-php": "^1.0",
+        "laravel/framework": "^8.0",
+        "laravel/jetstream": "^1.4",
+        "laravel/passport": "^10.1",
+        "laravel/sanctum": "^2.6",
+        "laravel/tinker": "^2.0",
+        "livewire/livewire": "^2.7",
+        "milon/barcode": "^9.0",
+        "phpoffice/phpspreadsheet": "^1.16",
+        "pusher/pusher-php-server": "^6.1.0",
+        "simplesoftwareio/simple-qrcode": "~4"
+    },
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.5",
+        "facade/ignition": "^2.3.6",
+        "fzaninotto/faker": "^1.9.1",
+        "mockery/mockery": "^1.3.1",
+        "phpunit/phpunit": "^9.3"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "platform": {
+            "php": "7.3"
+        },
+        "platform-check": false
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    }
+}

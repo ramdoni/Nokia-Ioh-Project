@@ -1,0 +1,61 @@
+.rs-control{
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+/* appearance 1 */
+#appearance1 .rs-range-color  {
+background-color: #5673E7;
+}
+#appearance1 .rs-path-color  {
+      background-color: #dedede;
+}
+#appearance1 .rs-handle  {
+      background-color: #000000;
+}
+#appearance1 .rs-border  {
+      border-color: white;
+}
+/* appearance 2 */
+
+#appearance2 .rs-range-color  {
+      background-color: #ff8d00;
+}
+#appearance2 .rs-handle:after  {
+      background-color: #000000;
+}
+#appearance2 .rs-border  {
+      border-color: #ff8d00;
+}
+
+/* appearance 3 */
+#appearance3 .rs-range-color  {
+      background-color: #33B5E5;
+}
+#appearance3 .rs-path-color  {
+      background-color: #C2E9F7;
+}
+#appearance3 .rs-handle  {
+      background-color: #C2E9F7;
+      padding: 7px;
+      border: 2px solid #C2E9F7;
+}
+#appearance3 .rs-handle.rs-focus  {
+      border-color: #33B5E5;
+}
+#appearance3 .rs-handle:after  {
+      border-color: #33B5E5;
+      background-color: #33B5E5;
+}
+#appearance3 .rs-border  {
+      border-color: transparent;
+}
+
+/* appearance 4 */
+#appearance3 .rs-range-color  {
+    background-color: black;
+}
+#appearance3 .rs-handle  {
+    background-color: #fff;
+    border: 5px solid black;
+}

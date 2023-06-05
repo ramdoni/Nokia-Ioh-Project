@@ -1,0 +1,167 @@
+// Bootstrap colors
+$color-primary: #49c5b6;
+$color-accent: #5c8ed4;
+$color-info: #3C89DA;
+$color-success: #22af46;
+$color-warning: #f3ad06;
+$color-danger: #de4848;
+$color-muted: #9A9A9A;
+$color-default-dark: #acb5c1;
+
+// Fonts
+$font-family: 'Ubuntu', sans-serif;
+$font-size: 14px;
+$font-color: #5A5A5A;
+$link-color: #6290d0;
+$link-color-hover: darken($link-color, 8%);
+$line-color: #e8e8e8;
+$dark-line-color: #1f2125;
+
+// Custom colors
+$color-red: #B54D4D;
+$col-red: #ee2558;
+$col-blue: #1d8ecd;
+$col-orange: #f5a81d;
+$col-green: #86c541;
+$col-dark: #17191c;
+$col-white: #ffffff;
+
+$grey-50: #f4f7f6 !default;
+$grey-100: #f7f7f7 !default;
+$grey-200: #f0f0f0 !default;
+$grey-300: #eeeeee !default;
+$grey-400: #bdbdbd !default;
+$grey-500: #999999 !default;
+$grey-600: #777777 !default;
+$grey-700: #666666 !default;
+$grey-800: #444444 !default;
+$grey-900: #222222 !default;
+
+$purple: #a27ce6 !default;
+$orange: #ffce4b !default;
+$green: #50d38a !default;
+$blue: #3eacff !default;
+$blush: #e47297 !default;
+$cyan: #49c5b6 !default;
+
+
+$sidebar-width: 250px;
+$sidebar-color: #f8f8f8;
+
+
+$font-weight-300:             300         !default;
+$font-weight-400:             400         !default;
+$font-weight-500:              500         !default;
+$font-weight-600:              600         !default;
+$font-weight-700:              700         !default;
+
+$border-radius-extra-small:     0.125rem    !default;
+$border-radius-small:           0.1875rem   !default;
+$border-radius-large:           0.550rem     !default;
+$border-radius-extreme:         0.875rem    !default;
+
+
+// Breakpoints
+$break-xsmall: 640px;
+$break-small: 768px;
+$break-medium: 992px;
+$break-1024: 1024px;
+$break-large: 1200px;
+$break-1280: 1280px;
+$break-xlarge: 1440px;
+
+// custom colors
+$custom-colors: (
+	"blue": #0E9BE2,
+	"green": #7CAC25,
+	"orange": #FF4402,
+	"purple": #AB7DF6,
+	"yellow": #F3BB23,
+	"lightseagreen": #20B2AA
+);
+
+// Social media brand colors
+$social-colors : (
+	z500px: #0099e5,
+	about-me: #00405d,
+	airbnb: #fd5c63,
+	alphabet: #ed1c24,
+	amazon: #ff9900,
+	american-express: #002663,
+	aol: #ff0b00,
+	behance: #1769ff,
+	bing: #ffb900,
+	bitbucket: #205081,
+	bitly: #ee6123,
+	blogger: #f57d00,
+	booking-com: #003580,
+	buffer: #168eea,
+	code-school: #616f67,
+	codecademy: #f65a5b,
+	creative-market: #8ba753,
+	delicious: #3399ff,
+	deviantart: #05cc47,
+	digg: #005be2,
+	disqus: #2e9fff,
+	django: #092e20,
+	dribbble: #ea4c89,
+	dropbox: #007ee5,
+	drupal: #0077c0,
+	elance: #0d69af,
+	envato: #82b541,
+	etsy: #d5641c,
+	facebook: #3b5998,
+	feedly: #2bb24c,
+	flattr: #f67c1a,
+	flickr: #0063dc,
+	flipboard: #e12828,
+	flixster: #2971b2,
+	foursquare: #0732a2,
+	github: #333333,
+	google: #4285f4,
+	google-plus: #dc4e41,
+	instagram: #3f729b,
+	kickstarter: #2bde73,
+	kik: #82bc23,
+	lastfm: #d51007,
+	line: #00c300,
+	linkedin: #0077b5,
+	mail-ru: #168de2,
+	mailchimp: #2c9ab7,
+	myspace: #000000,
+	netflix: #e50914,
+	ning: #75af42,
+	path: #ee3423,
+	patreon: #e6461a,
+	paypal: #003087,
+	photobucket: #0ea0db,
+	pinterest: #bd081c,
+	product-hunt: #da552f,
+	quora: #a82400,
+	rdio: #007dc3,
+	reddit: #ff4500,
+	rss: #f26522,
+	salesforce: #1798c1,
+	scribd: #1a7bba,
+	shopify: #96bf48,
+	skype: #00aff0,
+	slack: #6ecadc,
+	slideshare: #0077b5,
+	soundcloud: #ff8800,
+	spotify: #2ebd59,
+	squarespace: #222222,
+	stackoverflow: #fe7a15,
+	stripe: #00afe1,
+	stumbleupon: #eb4924,
+	telegram: #0088cc,
+	tumblr: #35465c,
+	twitch-tv: #6441a5,
+	twitter: #55acee,
+	vimeo: #162221,
+	vine: #00b488,
+	wechat: #7bb32e,
+	whatsapp: #43d854,
+	wordpress: #21759b,
+	yahoo: #410093,
+	youtube: #cd201f
+);

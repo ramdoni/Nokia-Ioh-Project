@@ -1,0 +1,10 @@
+.profilepage_2{
+    
+    .profile-header{
+        @extend .align-center;
+        
+        .profile-image{
+            @extend .m-b-20;
+        }
+	}
+}

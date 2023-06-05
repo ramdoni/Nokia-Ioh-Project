@@ -1,0 +1,41 @@
+.invoice1{
+
+    .logo,
+    .clientlogo{
+        float: left;
+        height: 70px;
+        width: 70px;
+    }
+    .info {
+        @extend .displayblock;
+        float: left;
+        @extend .m-l-20;
+    }
+
+    .invoice-top{
+        
+        .title {
+            float: right;
+        }
+    }
+    .invoice-mid{
+        .info{
+            width: calc(100% - 90px);
+        }
+    }
+}
+
+
+.invoice{
+    .nav-tabs{
+        @extend .p-l-0;
+        @extend .p-r-0;
+    }
+    .table{
+        tr{
+            td{
+                vertical-align: middle;
+            }
+        }
+    }
+}

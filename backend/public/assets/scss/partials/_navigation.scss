@@ -1,0 +1,485 @@
+/* Navigation */
+
+/* Top Nav Bar */
+.navbar-fixed-top{
+    position: fixed;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    background: $col-white;
+    z-index: 99;
+    @extend .padding-0;
+	border-bottom: 1px solid $grey-300;
+	
+	@include max-screen($break-medium){
+		top: 2px;
+	}
+
+    .navbar-btn{
+        display: none;
+        float: left;
+        @extend .padding-0;
+
+        button {
+			font-size: 20px;
+			@extend .p-l-0;
+            line-height: .7;
+            border: none;
+            background: none;
+            outline: none;
+        }
+    
+        @include max-screen($break-xsmall) {
+			margin-left: 0;
+        }
+
+        @include max-screen($break-large) {
+			display: block;
+        }
+    }
+
+    .navbar-brand {
+        padding: 15px 0;
+        position: relative;
+        
+        @include max-screen($break-medium){
+            padding: 15px;
+        }
+    
+        img{
+            width: 85px;
+            vertical-align: top;
+            margin-top: 2px;
+        }
+    }
+
+    .navbar-right{
+		width: calc(100% - 250px);
+		
+		@include max-screen($break-1024){
+			width: calc(100% - 150px);
+		}
+
+		@include max-screen($break-medium){
+			width: calc(100% - 160px);
+		}
+
+        #navbar-search {
+            float: left;
+            @extend .m-r-20;
+			margin-top: 6px;			
+        
+            .form-control{
+				@extend .p-l-20;
+				height: 40px;
+            }
+        
+            i{
+                font-size: 12px;
+            }
+        
+            @include max-screen($break-small - 1px) {
+                display: none;
+            }
+        }
+
+        .navbar-nav{
+            @extend .inlineblock;
+            > li{
+                @extend .inlineblock;
+            }
+        }
+	}
+	
+}
+
+.navbar-nav {
+    @extend .margin-0;
+    @extend .m-r-15;
+
+	.icon-menu {
+		@include inline-block;
+		padding: 15px;
+		position: relative;
+		
+		@include max-screen($break-xsmall) {
+			padding: 10px;
+		}
+
+		i {
+            font-size: 18px;
+            color: $grey-700;
+        }
+        
+        &::after{
+            display: none;
+        }
+
+		.notification-dot {
+			@include border-radius(50%);
+			width: 8px;
+			height: 8px;
+			position: absolute;
+			top: 12px;
+			right: 7px;
+			background-color: $col-dark;
+
+			@include max-screen($break-xsmall) {
+				top: 8px;
+			}
+		}
+	}
+
+	.dropdown-menu {
+		@include box-shadow(0px 2px 20px 0px rgba(0,0,0,0.2));
+		background: $col-white;
+		top: 80%;
+		position: absolute;
+		right: 0;
+		left: auto;
+		@extend .br8;
+		border: 1px solid $col-white;
+		padding:20px;
+	}
+
+	ul.notifications {
+        background:  $col-dark;
+		width: 500px;
+
+		@include max-screen($break-small) {
+			width: calc(100% - 20px);
+    		margin: 0 10px;
+		}
+
+		li {
+			border-bottom: 1px solid $dark-line-color;
+
+			&.header{
+                @extend .p-b-20;
+                color: $grey-500;
+			}
+
+			&.footer a { 
+                @extend .p-t-20;
+                @extend .p-b-0;
+                color: $color-accent;                
+
+				&:hover,
+				&:focus {
+					background: transparent;
+				}
+            }
+
+            &:last-child {
+				border-bottom: none;
+			}
+
+			i {
+				font-size: 24px;
+			}
+
+			> a {
+				padding:15px 0;
+				color: $grey-600;
+				
+				@extend .displayblock;
+				
+				.media{
+					@extend .m-b-0;
+					.media-left{
+						@extend .m-r-20;
+					}
+				}
+
+				&:hover,
+				&:focus {
+					background-color: rgba(255,255,255,0.03);
+				}
+			}
+
+			.text {                
+                @extend .m-b-0;
+                white-space: nowrap;
+                width: 88%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                @extend .displayblock;
+			}
+
+			.timestamp {
+				font-size: 13px;
+				color: $grey-700;
+			}
+		}
+	}
+
+	ul.user-menu {
+		width: 250px;
+		
+		@include max-screen($break-small) {
+			right: 20px;
+		}
+
+		> li {
+			&.menu-heading {
+				padding: 25px 20px 5px 0px;
+				font-weight: $font-weight-700;
+			}
+
+			&:first-child {                
+                @extend .p-t-0;
+			}
+		}
+
+		> li > a {            
+            @extend .displayblock;
+
+			&:hover,
+			&:focus {
+				background: none;
+			}
+		}
+
+		.menu-button {
+            @extend .align-center;
+            @extend .p-t-20;
+		}
+
+		&.menu-icon {
+			color: $col-white;
+
+			> li > a {
+				@extend .p-t-5;
+				@extend .p-b-5;
+				color: $col-white;
+                span {
+                    @extend .m-l-10;
+                }
+			}
+		}
+	}
+
+	@include max-screen($break-small - 1px) {
+		margin-right: 0;
+
+		> li {
+			display: table-cell;
+			position: inherit;
+			text-align: center;
+		}
+
+		.dropdown-menu {
+			max-height: 400px;
+			overflow: auto;			
+		}
+		
+		.dropdown-menu > li > a {
+			white-space: normal;
+		}
+
+		.open .dropdown-menu {
+			@include box-shadow(0px 2px 6px 0px rgba(0,0,0,0.05));
+
+			position: absolute;
+			width: 100%;
+			background: $col-white;
+
+			> li > a {
+				padding: 3px 20px;
+			}
+
+			&.notifications > li > a {
+				padding: 12px 15px;
+			}
+		}
+	}
+}
+
+@include max-screen($break-small) {
+	.navbar > .container .navbar-brand, 
+	.navbar > .container-fluid .navbar-brand {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
+@include min-screen($break-small + 1px) {
+	
+}
+
+
+#navbar-menu {
+	float: right;
+}
+
+.nav-tabs{
+
+    > li{
+
+        &.active > a {
+            &,
+            &:hover,
+            &:focus {
+                background-color: #f4f7f6;
+                color: $font-color;
+            }
+        }
+
+        > a {
+            color: inherit;
+            font-weight: $font-weight-600;
+        
+            &:hover,
+            &:focus {
+                background-color: #f5f5f5;
+            }
+        }
+    }
+}
+
+.tab-content {
+	padding: 15px;
+}
+
+.nav-tabs-colored > li.active > a {
+	&,
+	&:hover,
+	&:focus {
+		background-color: #f5f5f5;
+		color: $font-color;
+	}
+}
+
+.tab-content-colored {
+	background-color: #f5f5f5;
+}
+
+.nav .open > a {
+	&,
+	&:hover,
+	&:focus {
+		border-color: #ddd;
+	}
+}
+
+.dropdown-menu {
+	> li > a {
+		&,
+		&:hover,
+		&:focus {
+			color: $font-color;
+		}
+	}
+
+	> .active > a {
+		&,
+		&:hover,
+		&:focus {
+			background-color: $color-accent;
+		}
+	}
+}
+
+.nav-pills{
+
+    > li{
+
+        &.active > a {
+            &,
+            &:hover,
+            &:focus {
+                background-color: #efefef;
+                color: $font-color;
+            }
+        }
+
+        > a {
+            color: inherit;
+        }
+    }
+}
+
+.btn-toggle-fullwidth {	
+	z-index: 99;
+	margin-top: -6px;
+	padding-left: 0 !important;
+
+	i {
+		margin:0 !important;
+	}
+
+	@include max-screen($break-1024) {
+		display: none;
+	}
+}
+
+.nav-tabs-new{
+
+    > li{
+
+        > a {
+			color: $grey-600;
+			@extend .margin-0;
+			@extend .m-r-5;			
+			border: 1px solid $grey-300;
+			border-radius: 30px;
+			padding:7px 23px;
+			background-color: transparent;
+        
+            &:hover,
+            &:focus {
+				background-color: $color-primary;
+				color: $col-white;
+			}
+			&.active{
+				border: 1px solid $color-primary !important;
+				background: $color-primary;
+				color: $col-white;
+			}
+        }
+    }
+}
+
+.nav-tabs-new2{
+
+	border-bottom: 1px solid $grey-300;
+
+    > li{
+
+        > a {
+			color: $grey-600;
+			padding: 7px 20px;
+			@extend .m-r-5;
+			background-color: transparent;
+			border-bottom: transparent;
+			font-size: 15px;
+        
+            &:hover,
+            &:focus {
+				color: $color-primary;
+				border-bottom: 2px solid $color-primary !important;
+			}
+			&.active{
+				border-bottom: 2px solid $color-primary !important;
+				background-color: transparent;
+				color: $color-primary;
+			}
+        }
+    }
+}
+
+.dropdown-lg{
+	.dropdown-menu{
+		top: 40px !important;
+		right: 0 !important;
+		width: 350px;
+		left: auto !important;
+		transform: inherit !important;
+		padding: 20px;
+		box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	}
+}
+
+
+
+

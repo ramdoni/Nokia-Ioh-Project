@@ -1,0 +1,1 @@
+{"ast":null,"code":"import platform from './node/index.js';\nexport { platform as default };","map":null,"metadata":{},"sourceType":"module"}

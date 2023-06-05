@@ -1,0 +1,52 @@
+.auth-main::before {
+    background: #ebecee !important;
+}
+.table tr td,.table tr th{
+    padding-bottom:3px;
+    padding-top:3px;
+}
+.table_padding_1 tr td,.table_padding_1 tr th {
+    padding-bottom:6px;
+    padding-top:6px;
+}
+.table-style1 tr td,
+.table-style1 tr th{
+    padding-top:4px;
+    padding-bottom:4px;
+    font-size:13px;
+}
+.table-nowrap tr td,.table-nowrap tr th{
+    white-space:unset !important;
+}
+.table-header-nowrap tr th{
+    white-space:nowrap !important;
+    background-color: #eee;
+}
+.select2-selection__placeholder{
+    color:#495057 !important;
+}
+
+.select2-container .select2-selection--single {
+    min-height: 36px;
+    height: auto !important;
+}
+.select2-selection__rendered {
+    white-space: break-spaces !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    margin-top:3px
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 5px !important;
+}
+.editable a {
+    text-decoration: none;
+    /* border-bottom: dashed 1px #0088cc; */
+}
+.theme-blue .page-loader-wrapper {background-color: white !important;color:black !important}
+
+.badge.badge-success.badge-active {background:#22af46;color:white}
+.badge.badge-danger.badge-active {background:#DE484C;color:white}
+.badge.badge-warning.badge-active {background:#f3ad06;color:white}
+.badge.badge-info.badge-active {background:#3C89DA;color:white}
+.badge.badge-primary.badge-active {background:#007bff;color:white}

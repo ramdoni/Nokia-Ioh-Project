@@ -1,0 +1,179 @@
+/* Page Profile */
+
+.profilepage_1 {
+    .tab-content{
+        @extend .padding-0;
+    }
+
+	.profile-heading {
+		margin-bottom: 30px;
+		font-size: 20px;
+		font-weight: normal;
+	}
+
+	.user-photo {
+		width: 90px;
+		border: 2px solid #e2e2e2;
+	}
+
+	.profile-section {
+		margin-bottom: 70px;
+    }
+
+	@include max-screen($break-small - 1px) {
+		
+	}
+}
+
+.plan {
+	@include border-radius(3px);
+
+	padding: 15px 30px;
+	margin-bottom: 30px;
+	background-color: #FBFBFB;
+	border: 1px solid #E3E3E3;
+	color: #777;
+
+	.plan-title {
+		margin: 0 0 15px 0;
+
+		span {
+			font-size: 15px;
+			color: #afafaf;
+
+			i {
+				margin-left: 10px;
+				color: #7ED321;
+			}
+		}
+	}
+
+	&.selected-plan {
+		background-color: #F0FFDF;
+		border: 1px solid #C3D7AE;
+	}
+
+	.list-plan-details {
+		margin-bottom: 20px;
+
+		li {
+			margin-bottom: 5px;
+		}
+	}
+}
+
+.payment-info {
+	.payment-name {
+		margin-bottom: 12px;
+		font-size: 20px;
+	}
+
+	.edit-payment-info {
+		float: right;
+		position: relative;
+		top: -15px;
+	}
+}
+
+.billing-history {
+	
+
+	.billing-title {
+		margin-top: 0;
+		margin-bottom: 5px;
+		font-size: 18px;
+		
+		span {
+			margin-left: 10px;
+			font-size: 15px;
+		}
+	}
+
+	.amount {
+		font-size: 18px;
+	}
+
+	.action {
+		text-align: right;
+	}
+}
+
+.login-session {
+	padding: 30px 0;
+	position: relative;
+	border-bottom: 1px solid $line-color;
+
+	.device-icon {
+		font-size: 25px;
+		float: left;
+	}
+
+	.login-info {
+		padding-left: 40px;
+
+		.login-title {
+			margin: 0 0 5px 0;
+			font-size: 16px;
+		}
+
+		.login-detail {
+			color: $color-muted;
+		}
+	}
+
+	.btn-logout {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		padding: 0;
+		margin-top: -11px;
+	}
+}
+
+ul.list-login-session {
+	
+
+	> li:last-child .login-session {
+		border-bottom: none;
+	}
+}
+
+ul.list-email-received {
+	> li {
+		margin-bottom: 10px;
+	}
+}
+
+.connected-app {
+	padding: 10px 0;
+	position: relative;
+	border-bottom: 1px solid $line-color;
+
+	.app-icon {
+		font-size: 22px;
+		float: left;
+	}
+
+	.connection-info {
+		padding-left: 40px;
+
+		.app-title {
+			margin: 0 0 5px 0;
+			font-size: 18px;
+		}
+
+		.actions a {
+			margin-right: 15px;
+		}
+	}
+}
+
+ul.list-connected-app {
+	> li:first-child .connected-app {
+		padding-top: 0;
+	}
+
+	> li:last-child .connected-app {
+		border-bottom: none;
+	}
+}

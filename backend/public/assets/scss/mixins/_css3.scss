@@ -1,0 +1,75 @@
+// mixins for CSS3 features
+
+@mixin transition($transition) {
+	-webkit-transition: $transition;
+	-moz-transition: $transition;
+	-ms-transition: $transition;
+	-o-transition: $transition;
+	transition: $transition;
+}
+
+@mixin inline-block() {
+	display: inline-block;
+	vertical-align: middle;
+	*vertical-align: auto;
+	*zoom: 1;
+	*display: inline;
+}
+
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+}
+
+@mixin border-right-radius($right-radius) {
+	-moz-border-radius-topright: $right-radius;
+	-webkit-border-top-right-radius: $right-radius;
+	border-top-right-radius: $right-radius;
+	-moz-border-radius-bottomright: $right-radius;
+	-webkit-border-bottom-right-radius: $right-radius;
+	border-bottom-right-radius: $right-radius;
+}
+
+@mixin border-left-radius($left-radius) {
+	-moz-border-radius-topleft: $left-radius;
+	-webkit-border-top-left-radius: $left-radius;
+	border-top-left-radius: $left-radius;
+	-moz-border-radius-bottomleft: $left-radius;
+	-webkit-border-bottom-left-radius: $left-radius;
+	border-bottom-left-radius: $left-radius;
+}
+
+@mixin border-top-radius($top-radius) {
+	-moz-border-radius-topleft: $top-radius;
+	-webkit-border-top-left-radius: $top-radius;
+	border-top-left-radius: $top-radius;
+	-moz-border-radius-topright: $top-radius;
+	-webkit-border-top-right-radius: $top-radius;
+	border-top-right-radius: $top-radius;
+}
+
+@mixin border-bottom-radius($bottom-radius) {
+	-moz-border-radius-bottomleft: $bottom-radius;
+	-webkit-border-bottom-left-radius: $bottom-radius;
+	border-bottom-left-radius: $bottom-radius;
+	-moz-border-radius-bottomright: $bottom-radius;
+	-webkit-border-bottom-right-radius: $bottom-radius;
+	border-bottom-right-radius: $bottom-radius;
+}
+
+@mixin box-shadow($box-shadow) {
+	-moz-box-shadow: $box-shadow;
+	-webkit-box-shadow: $box-shadow;
+	box-shadow: $box-shadow;
+}
+
+@mixin opacity($opacity) {
+	opacity: $opacity;
+	$opacity-ie: $opacity * 100;
+	filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+
+
+

@@ -1,0 +1,278 @@
+/* Bootstrap Elements */
+
+/* bootstrap progress bar */
+.progress {
+	@include border-radius(2px);
+	@include box-shadow(none);
+
+	background-color: #f1f1f1;
+
+	&.wide {
+		width: 60px;
+	}
+
+	.progress-bar {
+		@include transition(width 3s ease);
+		@include box-shadow(none);
+	}
+
+	&.progress-lg {
+		height: 28px;
+	}
+
+	&.progress-sm {
+		height: 12px;
+	}
+
+	&.progress-xs {
+		height: 5px;
+	}
+
+	&.progress-sm, 
+	&.progress-xs {
+		.progress-bar {
+			text-indent: -9999px;
+		}
+	}
+}
+
+.progress-bar {
+	background-color: $color-accent;
+}
+
+.progress-bar-success {
+	background-color: $color-success;
+}
+
+.progress-bar-warning {
+	background-color: $color-warning;
+}
+
+.progress-bar-danger {
+	background-color: $color-danger;
+}
+
+.progress-bar-info {
+	background-color: $color-info;
+}
+
+@each $color-name, $color-value in $custom-colors {
+	@include progress-transparent-variant($color-name, $color-value);
+}
+
+
+
+.tooltip-inner {
+	background-color: #5a5a5a;
+}
+
+.tooltip {
+	&.in {
+		@include opacity(1);
+	}
+
+	&.left .tooltip-arrow {
+		border-left-color: #5a5a5a;
+	}
+
+	&.right .tooltip-arrow {
+		border-right-color: #5a5a5a;
+	}
+
+	&.top .tooltip-arrow {
+		border-top-color: #5a5a5a;
+	}
+
+	&.bottom .tooltip-arrow {
+		border-bottom-color: #5a5a5a;
+	}
+}
+
+.popover {
+	@include box-shadow(0px 2px 6px 0px rgba(0,0,0,0.05));
+
+	font-family: $font-family;
+	border-color: #ededed;
+}
+
+.popover-title {
+	font-weight: 600;
+	background-color: #f5f5f5;
+	color: $font-color;
+}
+
+/* accordion */
+.panel-group .panel {
+	.panel-heading {
+		padding: 0;
+	}
+
+	.panel-title {
+		font-size: 14px;
+		font-family: $font-family;
+	}
+
+	.panel-title > a {
+		display: block;
+		padding: 10px 15px;
+
+		&:hover,
+		&:focus {
+			color: inherit;
+		}
+
+		i {
+			font-size: 18px;
+			margin-right: 5px;
+
+			&.icon-collapsed {
+				display: none;
+			}
+
+			&.right {
+				float: right;
+				margin-right: 0; 
+			}
+		}
+
+		&.collapsed {
+			.icon-expanded {
+				display: none;
+			}
+
+			.icon-collapsed {
+				@include inline-block;
+
+				vertical-align: baseline;
+			}
+		}
+	}
+}
+
+/* paginations */
+.pagination {
+	> li > a,
+	> li > span {
+		color: $color-accent;
+	}
+	
+	> li {
+		@include pagination-button-color($color-accent);
+
+		&:first-child > a,
+		&:first-child > span {
+			@include border-left-radius(2px);
+		}
+
+		&:last-child > a,
+		&:last-child > span {
+			@include border-right-radius(2px);
+		}
+	}
+
+	> .active {
+		@include pagination-button-color($color-accent);
+
+		> a, > span {
+			background-color: $color-accent;
+			border-color: darken($color-accent, 5%);
+		}
+	}
+
+	&.borderless {
+		> li {
+			> a,
+			> span {
+				@include border-radius(2px);
+
+				border-color: transparent;
+				margin: 0 1px;
+			}
+
+			&:first-child,
+			&:last-child {
+				> a,
+				> span {
+					@include border-radius(2px);
+				}
+			}
+
+			&.active {
+				> a,
+				> span {
+					color: #fff;
+					background-color: $color-accent;
+
+					&:hover,
+					&:focus {
+						color: #fff;
+						background-color: $color-accent;
+					}
+				}
+			}
+		}
+	}
+}
+
+.pager {
+	li > a {
+		border-color: $color-accent;
+
+		&:hover, &:focus {
+			background-color: $color-accent;
+			border-color: darken($color-accent, 3%);
+			color: #fff;
+		}
+	}
+
+	.disabled > a, 
+	.disabled > a:hover, 
+	.disabled > a:focus, 
+	.disabled > span {
+		border-color: #ddd;
+	}
+}
+
+.bd-example-border-utils [class^=border] {
+	display: inline-block;
+	width: 5rem;
+	height: 5rem;
+	margin: .25rem;
+	background-color: #f5f5f5;
+  }
+
+
+
+  .blockquote {
+	border-left: none;
+	border: 1px solid $grey-600;;
+	padding: 20px;
+	font-size: 1.2em;
+    line-height: 1.8;
+    
+	&.blockquote-primary {
+        border-color: $color-primary;
+        small{
+            color: $color-primary;
+        }
+    }
+
+    &.blockquote-info {
+        border-color: $color-info;
+        small{
+            color: $color-info;
+        }
+    }
+
+    &.blockquote-danger {
+        border-color: $color-danger;
+        small{
+            color: $color-danger;
+        }
+    }
+    
+    small {        
+        font-size: .93em;
+        text-transform: uppercase;
+    }
+}

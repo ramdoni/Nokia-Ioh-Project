@@ -1,0 +1,200 @@
+/* sparkline chart */
+#jqstooltip {
+	background-color: $col-white;
+	border-color: #ddd;
+	color: $font-color;
+
+	.jqsfield {
+		color: $font-color;
+	}
+}
+
+/* chartist */
+$ct-series-colors: (
+	a: #6ebdd1,
+	b: #f9ab6c,
+	c: #afc979,
+	d: #AB7DF6,
+	e: #5cc196,
+	f: #d17905,
+	g: #453d3f,
+	h: #59922b,
+	i: #0544d3,
+	j: #6b0392,
+	k: #f05b4f,
+	l: #dda458,
+	m: #eacf7d,
+	n: #86797d,
+	o: #b2c326,
+);
+
+.ct-chart {
+	position: relative;
+}
+
+.ct-series {
+	.ct-line {
+		stroke-width: 3px;
+	}
+
+	.ct-bar {
+		stroke-width: 15px;
+	}
+
+	.ct-point {
+		stroke-width: 10px;
+		stroke-linecap: circle;
+	}
+}
+
+@each $series-name, $series-color in $ct-series-colors {
+	.ct-series-#{$series-name} {
+		.ct-line,
+		.ct-bar,
+		.ct-point {
+			stroke: $series-color;
+		}
+
+		.ct-area, 
+		.ct-slice-donut-solid, 
+		.ct-slice-pie,
+		.ct-bar {
+			fill: $series-color;
+		}
+	}
+}
+
+.chartist-tooltip {
+	@include border-radius(3px);
+
+	min-width: 3.5em;
+	background: #5a5a5a;
+	color: $col-white;
+
+	&:before {
+		margin-left: -8px;
+		border-width: 8px;
+		border-top-color: #5a5a5a;
+	}
+}
+
+.ct-axis-title {
+	fill: #9a9a9a;
+}
+
+
+/* Top Products Chart */
+.ct-label {
+	font-size: 14px;
+	color: $font-color;
+}
+.ct-legend {
+	position: relative;	
+	z-index: 10;
+	text-align: right;
+	padding: 0;
+
+	li {
+		@include inline-block;
+
+		position: relative;
+		padding-left: 18px;
+		margin-bottom: 3px;
+		margin-right: 20px;
+		list-style-type: none;
+	}
+
+	li:before {
+		width: 12px;
+		height: 12px;
+		position: absolute;
+		top: 5px;
+		left: 0;
+		content: '';
+		border: 3px solid transparent;
+		border-radius: 2px;
+	}
+
+	li.inactive:before {
+		background: transparent;
+	}
+
+	&.ct-legend-inside {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
+	$i: 0;
+	@each $series-name, $series-color in $ct-series-colors {
+		.ct-series-#{$i}:before {
+			background-color: $series-color;
+			border-color: $series-color;
+		}
+
+		$i: $i + 1;
+	}
+}
+/* End Top Products Chart */
+.ct-grid{
+    stroke: rgba(0,0,0,.1);       
+}
+.user_statistics{
+    .ct-series{
+        .ct-point{
+            stroke-width: 3px;
+        }
+        .ct-line{
+            stroke-width: 1px;
+        }
+    }
+    .ct-series-0:before{
+        background-color: #ffffff;
+        border-color: #f8921a;
+    }
+    .ct-series-1:before{
+        background-color: #ffffff;
+        border-color: #6fb92c;
+    }
+    .ct-series-2:before{
+        background-color: #ffffff;
+        border-color: #157dd1;
+    }
+    .ct-series-3:before{
+        background-color: #ffffff;
+        border-color: #282828;
+    }
+    .ct-series-a{
+        .ct-line,
+        .ct-point{
+            stroke: #f8921a;
+        }
+    }
+    .ct-series-b{
+        .ct-line,
+        .ct-point{
+            stroke: #6fb92c;
+        }
+    }
+    .ct-series-c{
+        .ct-line,
+        .ct-point{
+            stroke: #157dd1;
+        }
+    }
+    .ct-series-d{
+        .ct-line,
+        .ct-point{
+            stroke: #282828;
+        }
+    }
+}
+
+.currency_state{
+    .icon{
+        line-height: 50px;
+    }
+}
+
+
+
