@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:annotation>
         <xs:documentation source="https://phpunit.de/documentation.html">
-            This Schema file defines the rules by which the XML configuration file of PHPUnit 9.5 may be structured.
+            This Schema file defines the rules by which the XML configuration file of PHPUnit 9.6 may be structured.
         </xs:documentation>
         <xs:appinfo source="https://phpunit.de/documentation.html"/>
     </xs:annotation>
@@ -279,8 +279,10 @@
     </xs:complexType>
     <xs:complexType name="testSuiteType">
         <xs:sequence>
-            <xs:group ref="pathGroup"/>
-            <xs:element name="exclude" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="pathGroup"/>
+                <xs:element name="exclude" type="xs:string"/>
+            </xs:choice>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>

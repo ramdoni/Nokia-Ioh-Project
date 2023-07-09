@@ -1,14 +1,17 @@
 var path = require('path');
 var url = require('url');
 
+var isDataUriResource = require('../utils/is-data-uri-resource');
+
 var DOUBLE_QUOTE = '"';
 var SINGLE_QUOTE = '\'';
 var URL_PREFIX = 'url(';
 var URL_SUFFIX = ')';
 
+var PROTOCOL_LESS_PREFIX_PATTERN = /^[^\w\d]*\/\//;
 var QUOTE_PREFIX_PATTERN = /^["']/;
 var QUOTE_SUFFIX_PATTERN = /["']$/;
-var ROUND_BRACKETS_PATTERN = /[\(\)]/;
+var ROUND_BRACKETS_PATTERN = /[()]/;
 var URL_PREFIX_PATTERN = /^url\(/i;
 var URL_SUFFIX_PATTERN = /\)$/;
 var WHITESPACE_PATTERN = /\s/;
@@ -24,21 +27,17 @@ function rebase(uri, rebaseConfig) {
     return uri;
   }
 
-  if (isRemote(uri) || isSVGMarker(uri) || isInternal(uri)) {
+  if (isRemote(uri) || isSVGMarker(uri) || isInternal(uri) || isDataUriResource(uri)) {
     return uri;
-  }
-
-  if (isData(uri)) {
-    return '\'' + uri + '\'';
   }
 
   if (isRemote(rebaseConfig.toBase)) {
     return url.resolve(rebaseConfig.toBase, uri);
   }
 
-  return rebaseConfig.absolute ?
-    normalize(absolute(uri, rebaseConfig)) :
-    normalize(relative(uri, rebaseConfig));
+  return rebaseConfig.absolute
+    ? normalize(absolute(uri, rebaseConfig))
+    : normalize(relative(uri, rebaseConfig));
 }
 
 function isAbsolute(uri) {
@@ -54,11 +53,7 @@ function isInternal(uri) {
 }
 
 function isRemote(uri) {
-  return /^[^:]+?:\/\//.test(uri) || uri.indexOf('//') === 0;
-}
-
-function isData(uri) {
-  return uri.indexOf('data:') === 0;
+  return /^[^:]+?:\/\//.test(uri) || PROTOCOL_LESS_PREFIX_PATTERN.test(uri);
 }
 
 function absolute(uri, rebaseConfig) {
@@ -78,13 +73,12 @@ function normalize(uri) {
 function quoteFor(unquotedUrl) {
   if (unquotedUrl.indexOf(SINGLE_QUOTE) > -1) {
     return DOUBLE_QUOTE;
-  } else if (unquotedUrl.indexOf(DOUBLE_QUOTE) > -1) {
+  } if (unquotedUrl.indexOf(DOUBLE_QUOTE) > -1) {
     return SINGLE_QUOTE;
-  } else if (hasWhitespace(unquotedUrl) || hasRoundBrackets(unquotedUrl)) {
+  } if (hasWhitespace(unquotedUrl) || hasRoundBrackets(unquotedUrl)) {
     return SINGLE_QUOTE;
-  } else {
-    return '';
   }
+  return '';
 }
 
 function hasWhitespace(url) {
@@ -106,13 +100,13 @@ function rewriteUrl(originalUrl, rebaseConfig, pathOnly) {
     .replace(QUOTE_SUFFIX_PATTERN, '')
     .trim();
 
-  var quote = strippedUrl[0] == SINGLE_QUOTE || strippedUrl[0] == DOUBLE_QUOTE ?
-    strippedUrl[0] :
-    quoteFor(unquotedUrl);
+  var quote = strippedUrl[0] == SINGLE_QUOTE || strippedUrl[0] == DOUBLE_QUOTE
+    ? strippedUrl[0]
+    : quoteFor(unquotedUrl);
 
-  return pathOnly ?
-    rebase(unquotedUrl, rebaseConfig) :
-    URL_PREFIX + quote + rebase(unquotedUrl, rebaseConfig) + quote + URL_SUFFIX;
+  return pathOnly
+    ? rebase(unquotedUrl, rebaseConfig)
+    : URL_PREFIX + quote + rebase(unquotedUrl, rebaseConfig) + quote + URL_SUFFIX;
 }
 
 module.exports = rewriteUrl;

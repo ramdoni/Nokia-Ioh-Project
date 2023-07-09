@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 
+#[\AllowDynamicProperties]
 class TemporaryUploadedFile extends UploadedFile
 {
     protected $storage;
@@ -124,7 +125,7 @@ class TemporaryUploadedFile extends UploadedFile
         return $this->storage->delete($this->path);
     }
 
-    public function storeAs($path, $name, $options = [])
+    public function storeAs($path, $name = null, $options = [])
     {
         $options = $this->parseOptions($options);
 

@@ -20,7 +20,7 @@
         "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
-        "livewire/livewire": "^2.7",
+        "livewire/livewire": "^2.11",
         "milon/barcode": "^9.0",
         "phpoffice/phpspreadsheet": "^1.16",
         "pusher/pusher-php-server": "^6.1.0",

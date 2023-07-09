@@ -21,18 +21,18 @@ function removeEmpty(tokens) {
     var isEmpty = false;
 
     switch (token[0]) {
-      case Token.RULE:
-        isEmpty = token[1].length === 0 || token[2].length === 0;
-        break;
-      case Token.NESTED_BLOCK:
-        removeEmpty(token[2]);
-        isEmpty = token[2].length === 0;
-        break;
-      case Token.AT_RULE:
-        isEmpty = token[1].length === 0;
-        break;
-      case Token.AT_RULE_BLOCK:
-        isEmpty = token[2].length === 0;
+    case Token.RULE:
+      isEmpty = token[1].length === 0 || token[2].length === 0;
+      break;
+    case Token.NESTED_BLOCK:
+      removeEmpty(token[2]);
+      isEmpty = token[2].length === 0;
+      break;
+    case Token.AT_RULE:
+      isEmpty = token[1].length === 0;
+      break;
+    case Token.AT_RULE_BLOCK:
+      isEmpty = token[2].length === 0;
     }
 
     if (isEmpty) {
@@ -59,17 +59,18 @@ function recursivelyOptimizeProperties(tokens, context) {
     var token = tokens[i];
 
     switch (token[0]) {
-      case Token.RULE:
-        optimizeProperties(token[2], true, true, context);
-        break;
-      case Token.NESTED_BLOCK:
-        recursivelyOptimizeProperties(token[2], context);
+    case Token.RULE:
+      optimizeProperties(token[2], true, true, context);
+      break;
+    case Token.NESTED_BLOCK:
+      recursivelyOptimizeProperties(token[2], context);
     }
   }
 }
 
 function level2Optimize(tokens, context, withRestructuring) {
   var levelOptions = context.options.level[OptimizationLevel.Two];
+  var level2Plugins = context.options.plugins.level2Block;
   var reduced;
   var i;
 
@@ -122,6 +123,10 @@ function level2Optimize(tokens, context, withRestructuring) {
     for (i = reduced.length - 1; i >= 0; i--) {
       level2Optimize(reduced[i][2], context, false);
     }
+  }
+
+  for (i = 0; i < level2Plugins.length; i++) {
+    level2Plugins[i](tokens);
   }
 
   if (levelOptions.removeEmpty) {

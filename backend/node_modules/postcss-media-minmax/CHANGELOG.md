@@ -1,3 +1,8 @@
+# 5.0.0 2021-01-12
+
+- Updated: Support for PostCSS v8+
+- Updated: Support for Node v10+
+
 # 4.0.0 2017-09-17
 
 - Updated: Support for PostCSS v7+

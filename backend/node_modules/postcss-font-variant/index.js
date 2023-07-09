@@ -1,11 +1,9 @@
-var postcss = require("postcss");
-
 /**
  * font variant convertion map
  *
  * @type {Object}
  */
-var fontVariantProperties = {
+const fontVariantProperties = {
   "font-variant-ligatures": {
     "common-ligatures": "\"liga\", \"clig\"",
     "no-common-ligatures": "\"liga\", \"clig off\"",
@@ -55,9 +53,9 @@ var fontVariantProperties = {
 }
 
 // The `font-variant` property is a shorthand for all the others.
-for (var prop in fontVariantProperties) {
-  var keys = fontVariantProperties[prop]
-  for (var key in keys) {
+for (const prop in fontVariantProperties) {
+  const keys = fontVariantProperties[prop]
+  for (const key in keys) {
     if (!(key in fontVariantProperties["font-variant"])) {
       fontVariantProperties["font-variant"][key] = keys[key]
     }
@@ -67,8 +65,8 @@ for (var prop in fontVariantProperties) {
 // Find font-feature-settings declaration before given declaration,
 // create if does not exist
 function getFontFeatureSettingsPrevTo(decl) {
-  var fontFeatureSettings = null;
-  decl.parent.walkDecls(function(decl) {
+  let fontFeatureSettings = null;
+  decl.parent.walkDecls((decl) => {
     if (decl.prop === "font-feature-settings") {
       fontFeatureSettings = decl;
     }
@@ -83,39 +81,46 @@ function getFontFeatureSettingsPrevTo(decl) {
   return fontFeatureSettings
 }
 
+function walkRule(rule) {
+  let fontFeatureSettings = null
+  // read custom media queries
+  rule.walkDecls((decl) => {
+    if (!fontVariantProperties[decl.prop]) {
+      return null
+    }
+
+    let newValue = decl.value
+    if (decl.prop === "font-variant") {
+      newValue = decl.value.split(/\s+/g).map((val) => {
+        return fontVariantProperties["font-variant"][val]
+      }).join(", ")
+    }
+    else if (fontVariantProperties[decl.prop][decl.value]) {
+      newValue = fontVariantProperties[decl.prop][decl.value]
+    }
+
+    if (fontFeatureSettings === null) {
+      fontFeatureSettings = getFontFeatureSettingsPrevTo(decl);
+    }
+    if (fontFeatureSettings.value && fontFeatureSettings.value !== newValue) {
+      fontFeatureSettings.value += ", " + newValue;
+    }
+    else {
+      fontFeatureSettings.value = newValue;
+    }
+  })
+}
+
 /**
  * Expose the font-variant plugin.
  */
-module.exports = postcss.plugin("postcss-font-variant", function() {
-  return function(styles) {
-    styles.walkRules(function(rule) {
-      var fontFeatureSettings = null
-      // read custom media queries
-      rule.walkDecls(function(decl) {
-        if (!fontVariantProperties[decl.prop]) {
-          return null
-        }
-
-        var newValue = decl.value
-        if (decl.prop === "font-variant") {
-          newValue = decl.value.split(/\s+/g).map(function(val) {
-            return fontVariantProperties["font-variant"][val]
-          }).join(", ")
-        }
-        else if (fontVariantProperties[decl.prop][decl.value]) {
-          newValue = fontVariantProperties[decl.prop][decl.value]
-        }
-
-        if (fontFeatureSettings === null) {
-          fontFeatureSettings = getFontFeatureSettingsPrevTo(decl);
-        }
-        if (fontFeatureSettings.value && fontFeatureSettings.value !== newValue) {
-          fontFeatureSettings.value += ", " + newValue;
-        }
-        else {
-          fontFeatureSettings.value = newValue;
-        }
-      })
-    })
+module.exports = () => {
+  return {
+    postcssPlugin: "postcss-font-variant",
+    Once(root) {
+      root.walkRules(walkRule)
+    }
   }
-})
+}
+
+module.exports.postcss = true

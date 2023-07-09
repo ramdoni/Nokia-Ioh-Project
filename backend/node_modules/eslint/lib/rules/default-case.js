@@ -4,19 +4,21 @@
  */
 "use strict";
 
-const DEFAULT_COMMENT_PATTERN = /^no default$/i;
+const DEFAULT_COMMENT_PATTERN = /^no default$/iu;
 
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "require `default` cases in `switch` statements",
-            category: "Best Practices",
+            description: "Require `default` cases in `switch` statements",
             recommended: false,
-            url: "https://eslint.org/docs/rules/default-case"
+            url: "https://eslint.org/docs/latest/rules/default-case"
         },
 
         schema: [{
@@ -37,10 +39,10 @@ module.exports = {
     create(context) {
         const options = context.options[0] || {};
         const commentPattern = options.commentPattern
-            ? new RegExp(options.commentPattern)
+            ? new RegExp(options.commentPattern, "u")
             : DEFAULT_COMMENT_PATTERN;
 
-        const sourceCode = context.getSourceCode();
+        const sourceCode = context.sourceCode;
 
         //--------------------------------------------------------------------------
         // Helpers
@@ -48,8 +50,8 @@ module.exports = {
 
         /**
          * Shortcut to get last element of array
-         * @param  {*[]} collection Array
-         * @returns {*} Last element
+         * @param {*[]} collection Array
+         * @returns {any} Last element
          */
         function last(collection) {
             return collection[collection.length - 1];

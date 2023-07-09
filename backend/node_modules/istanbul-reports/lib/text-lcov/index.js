@@ -1,14 +1,17 @@
+'use strict';
 /*
  Copyright 2012-2015, Yahoo Inc.
  Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-var util = require('util'),
-    LcovOnly = require('../lcovonly');
+const LcovOnly = require('../lcovonly');
 
-function TextLcov(opts) {
-    opts.file = '-';
-    LcovOnly.call(this, opts);
+class TextLcov extends LcovOnly {
+    constructor(opts) {
+        super({
+            ...opts,
+            file: '-'
+        });
+    }
 }
 
-util.inherits(TextLcov, LcovOnly);
 module.exports = TextLcov;

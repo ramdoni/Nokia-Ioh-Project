@@ -1,8 +1,6 @@
 //.CommonJS
 var CSSOM = {
   CSSRule: require("./CSSRule").CSSRule,
-  CSSGroupingRule: require("./CSSGroupingRule").CSSGroupingRule,
-  CSSConditionRule: require("./CSSConditionRule").CSSConditionRule
 };
 ///CommonJS
 
@@ -12,10 +10,12 @@ var CSSOM = {
  * @see https://drafts.csswg.org/css-conditional-3/#the-csssupportsrule-interface
  */
 CSSOM.CSSSupportsRule = function CSSSupportsRule() {
-  CSSOM.CSSConditionRule.call(this);
+  CSSOM.CSSRule.call(this);
+  this.conditionText = '';
+  this.cssRules = [];
 };
 
-CSSOM.CSSSupportsRule.prototype = new CSSOM.CSSConditionRule();
+CSSOM.CSSSupportsRule.prototype = new CSSOM.CSSRule();
 CSSOM.CSSSupportsRule.prototype.constructor = CSSOM.CSSSupportsRule;
 CSSOM.CSSSupportsRule.prototype.type = 12;
 

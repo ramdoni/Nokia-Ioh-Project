@@ -8,13 +8,15 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "layout",
+
         docs: {
-            description: "require or disallow Unicode byte order mark (BOM)",
-            category: "Stylistic Issues",
+            description: "Require or disallow Unicode byte order mark (BOM)",
             recommended: false,
-            url: "https://eslint.org/docs/rules/unicode-bom"
+            url: "https://eslint.org/docs/latest/rules/unicode-bom"
         },
 
         fixable: "whitespace",
@@ -23,7 +25,11 @@ module.exports = {
             {
                 enum: ["always", "never"]
             }
-        ]
+        ],
+        messages: {
+            expected: "Expected Unicode BOM (Byte Order Mark).",
+            unexpected: "Unexpected Unicode BOM (Byte Order Mark)."
+        }
     },
 
     create(context) {
@@ -36,7 +42,7 @@ module.exports = {
 
             Program: function checkUnicodeBOM(node) {
 
-                const sourceCode = context.getSourceCode(),
+                const sourceCode = context.sourceCode,
                     location = { column: 0, line: 1 },
                     requireBOM = context.options[0] || "never";
 
@@ -44,7 +50,7 @@ module.exports = {
                     context.report({
                         node,
                         loc: location,
-                        message: "Expected Unicode BOM (Byte Order Mark).",
+                        messageId: "expected",
                         fix(fixer) {
                             return fixer.insertTextBeforeRange([0, 1], "\uFEFF");
                         }
@@ -53,7 +59,7 @@ module.exports = {
                     context.report({
                         node,
                         loc: location,
-                        message: "Unexpected Unicode BOM (Byte Order Mark).",
+                        messageId: "unexpected",
                         fix(fixer) {
                             return fixer.removeRange([-1, 0]);
                         }

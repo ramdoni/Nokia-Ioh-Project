@@ -8,13 +8,15 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "enforce consistent naming when capturing the current execution context",
-            category: "Stylistic Issues",
+            description: "Enforce consistent naming when capturing the current execution context",
             recommended: false,
-            url: "https://eslint.org/docs/rules/consistent-this"
+            url: "https://eslint.org/docs/latest/rules/consistent-this"
         },
 
         schema: {
@@ -34,6 +36,7 @@ module.exports = {
 
     create(context) {
         let aliases = [];
+        const sourceCode = context.sourceCode;
 
         if (context.options.length === 0) {
             aliases.push("that");
@@ -44,8 +47,8 @@ module.exports = {
         /**
          * Reports that a variable declarator or assignment expression is assigning
          * a non-'this' value to the specified alias.
-         * @param {ASTNode} node - The assigning node.
-         * @param {string}  name - the name of the alias that was incorrectly used.
+         * @param {ASTNode} node The assigning node.
+         * @param {string} name the name of the alias that was incorrectly used.
          * @returns {void}
          */
         function reportBadAssignment(node, name) {
@@ -55,15 +58,15 @@ module.exports = {
         /**
          * Checks that an assignment to an identifier only assigns 'this' to the
          * appropriate alias, and the alias is only assigned to 'this'.
-         * @param {ASTNode} node - The assigning node.
-         * @param {Identifier} name - The name of the variable assigned to.
-         * @param {Expression} value - The value of the assignment.
+         * @param {ASTNode} node The assigning node.
+         * @param {Identifier} name The name of the variable assigned to.
+         * @param {Expression} value The value of the assignment.
          * @returns {void}
          */
         function checkAssignment(node, name, value) {
             const isThis = value.type === "ThisExpression";
 
-            if (aliases.indexOf(name) !== -1) {
+            if (aliases.includes(name)) {
                 if (!isThis || node.operator && node.operator !== "=") {
                     reportBadAssignment(node, name);
                 }
@@ -112,11 +115,12 @@ module.exports = {
         }
 
         /**
-         * Check each alias to ensure that is was assinged to the correct value.
+         * Check each alias to ensure that is was assigned to the correct value.
+         * @param {ASTNode} node The node that represents the scope to check.
          * @returns {void}
          */
-        function ensureWasAssigned() {
-            const scope = context.getScope();
+        function ensureWasAssigned(node) {
+            const scope = sourceCode.getScope(node);
 
             aliases.forEach(alias => {
                 checkWasAssigned(alias, scope);

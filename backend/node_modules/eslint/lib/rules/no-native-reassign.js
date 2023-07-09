@@ -10,17 +10,20 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "disallow assignments to native objects or read-only global variables",
-            category: "Best Practices",
+            description: "Disallow assignments to native objects or read-only global variables",
             recommended: false,
-            replacedBy: ["no-global-assign"],
-            url: "https://eslint.org/docs/rules/no-native-reassign"
+            url: "https://eslint.org/docs/latest/rules/no-native-reassign"
         },
 
         deprecated: true,
+
+        replacedBy: ["no-global-assign"],
 
         schema: [
             {
@@ -34,18 +37,23 @@ module.exports = {
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+
+        messages: {
+            nativeReassign: "Read-only global '{{name}}' should not be modified."
+        }
     },
 
     create(context) {
         const config = context.options[0];
         const exceptions = (config && config.exceptions) || [];
+        const sourceCode = context.sourceCode;
 
         /**
          * Reports write references.
-         * @param {Reference} reference - A reference to check.
-         * @param {int} index - The index of the reference in the references.
-         * @param {Reference[]} references - The array that the reference belongs to.
+         * @param {Reference} reference A reference to check.
+         * @param {int} index The index of the reference in the references.
+         * @param {Reference[]} references The array that the reference belongs to.
          * @returns {void}
          */
         function checkReference(reference, index, references) {
@@ -62,7 +70,7 @@ module.exports = {
             ) {
                 context.report({
                     node: identifier,
-                    message: "Read-only global '{{name}}' should not be modified.",
+                    messageId: "nativeReassign",
                     data: identifier
                 });
             }
@@ -70,18 +78,18 @@ module.exports = {
 
         /**
          * Reports write references if a given variable is read-only builtin.
-         * @param {Variable} variable - A variable to check.
+         * @param {Variable} variable A variable to check.
          * @returns {void}
          */
         function checkVariable(variable) {
-            if (variable.writeable === false && exceptions.indexOf(variable.name) === -1) {
+            if (variable.writeable === false && !exceptions.includes(variable.name)) {
                 variable.references.forEach(checkReference);
             }
         }
 
         return {
-            Program() {
-                const globalScope = context.getScope();
+            Program(node) {
+                const globalScope = sourceCode.getScope(node);
 
                 globalScope.variables.forEach(checkVariable);
             }

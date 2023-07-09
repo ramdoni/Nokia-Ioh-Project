@@ -9,13 +9,15 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow duplicate arguments in `function` definitions",
-            category: "Possible Errors",
+            description: "Disallow duplicate arguments in `function` definitions",
             recommended: true,
-            url: "https://eslint.org/docs/rules/no-dupe-args"
+            url: "https://eslint.org/docs/latest/rules/no-dupe-args"
         },
 
         schema: [],
@@ -27,13 +29,15 @@ module.exports = {
 
     create(context) {
 
+        const sourceCode = context.sourceCode;
+
         //--------------------------------------------------------------------------
         // Helpers
         //--------------------------------------------------------------------------
 
         /**
          * Checks whether or not a given definition is a parameter's.
-         * @param {eslint-scope.DefEntry} def - A definition to check.
+         * @param {eslint-scope.DefEntry} def A definition to check.
          * @returns {boolean} `true` if the definition is a parameter's.
          */
         function isParameter(def) {
@@ -47,7 +51,7 @@ module.exports = {
          * @private
          */
         function checkParams(node) {
-            const variables = context.getDeclaredVariables(node);
+            const variables = sourceCode.getDeclaredVariables(node);
 
             for (let i = 0; i < variables.length; ++i) {
                 const variable = variables[i];

@@ -39,7 +39,7 @@ class MySqlGrammar extends Grammar
             'create database %s default character set %s default collate %s',
             $this->wrapValue($name),
             $this->wrapValue($connection->getConfig('charset')),
-            $this->wrapValue($connection->getConfig('collation'))
+            $this->wrapValue($connection->getConfig('collation')),
         );
     }
 

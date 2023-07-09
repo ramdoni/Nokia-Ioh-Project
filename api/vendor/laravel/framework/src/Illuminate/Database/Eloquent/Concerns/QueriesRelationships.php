@@ -488,7 +488,7 @@ trait QueriesRelationships
             $relationship->getQualifiedForeignKeyName(),
             '=',
             $related->getAttributeValue($relationship->getOwnerKeyName()),
-            $boolean
+            $boolean,
         );
 
         return $this;

@@ -9,31 +9,43 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow `new` operators with the `Symbol` object",
-            category: "ECMAScript 6",
+            description: "Disallow `new` operators with the `Symbol` object",
             recommended: true,
-            url: "https://eslint.org/docs/rules/no-new-symbol"
+            url: "https://eslint.org/docs/latest/rules/no-new-symbol"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            noNewSymbol: "`Symbol` cannot be called as a constructor."
+        }
     },
 
     create(context) {
 
+        const sourceCode = context.sourceCode;
+
         return {
-            "Program:exit"() {
-                const globalScope = context.getScope();
+            "Program:exit"(node) {
+                const globalScope = sourceCode.getScope(node);
                 const variable = globalScope.set.get("Symbol");
 
                 if (variable && variable.defs.length === 0) {
                     variable.references.forEach(ref => {
-                        const node = ref.identifier;
+                        const idNode = ref.identifier;
+                        const parent = idNode.parent;
 
-                        if (node.parent && node.parent.type === "NewExpression") {
-                            context.report({ node, message: "`Symbol` cannot be called as a constructor." });
+                        if (parent && parent.type === "NewExpression" && parent.callee === idNode) {
+                            context.report({
+                                node: idNode,
+                                messageId: "noNewSymbol"
+                            });
                         }
                     });
                 }

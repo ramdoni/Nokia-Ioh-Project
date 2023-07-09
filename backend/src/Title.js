@@ -4,8 +4,8 @@ class Title extends React.Component {
     constructor(){
         super();
         this.state = {
-            title : "Koperasi Karyawan Incoe",
-            subTitle : "Dari Anggota untuk Anggota"
+            title : "Nokia",
+            subTitle : ""
         }
     }
 

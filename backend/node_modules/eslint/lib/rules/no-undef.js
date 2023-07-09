@@ -23,13 +23,15 @@ function hasTypeOfOperator(node) {
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow the use of undeclared variables unless mentioned in `/*global */` comments",
-            category: "Variables",
+            description: "Disallow the use of undeclared variables unless mentioned in `/*global */` comments",
             recommended: true,
-            url: "https://eslint.org/docs/rules/no-undef"
+            url: "https://eslint.org/docs/latest/rules/no-undef"
         },
 
         schema: [
@@ -37,21 +39,26 @@ module.exports = {
                 type: "object",
                 properties: {
                     typeof: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: false
                     }
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+        messages: {
+            undef: "'{{name}}' is not defined."
+        }
     },
 
     create(context) {
         const options = context.options[0];
         const considerTypeOf = options && options.typeof === true || false;
+        const sourceCode = context.sourceCode;
 
         return {
-            "Program:exit"(/* node */) {
-                const globalScope = context.getScope();
+            "Program:exit"(node) {
+                const globalScope = sourceCode.getScope(node);
 
                 globalScope.through.forEach(ref => {
                     const identifier = ref.identifier;
@@ -62,7 +69,7 @@ module.exports = {
 
                     context.report({
                         node: identifier,
-                        message: "'{{name}}' is not defined.",
+                        messageId: "undef",
                         data: identifier
                     });
                 });

@@ -1,15 +1,19 @@
-var postcss = require('postcss')
+// @ts-check
 
-module.exports = postcss.plugin('postcss-replace-overflow-wrap', function (opts) {
-  opts = opts || {}
-  var method = opts.method || 'replace'
+module.exports = function (opts) {
+    opts = opts || {}
+    var method = opts.method || 'replace'
+    return {
+        postcssPlugin: 'postcss-replace-overflow-wrap',
+        Declaration: {
+            'overflow-wrap': decl => {
+                decl.cloneBefore({ prop: 'word-wrap' })
+                if (method === 'replace') {
+                    decl.remove()
+                }
+            }
+        }
+    }
+}
 
-  return function (css) {
-    css.walkDecls('overflow-wrap', function (decl) {
-      decl.cloneBefore({ prop: 'word-wrap' })
-      if (method === 'replace') {
-        decl.remove()
-      }
-    })
-  }
-})
+module.exports.postcss = true

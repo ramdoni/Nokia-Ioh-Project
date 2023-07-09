@@ -178,7 +178,20 @@ final class BuilderHelpers
         }
 
         $builtinTypes = [
-            'array', 'callable', 'string', 'int', 'float', 'bool', 'iterable', 'void', 'object', 'mixed', 'never',
+            'array',
+            'callable',
+            'bool',
+            'int',
+            'float',
+            'string',
+            'iterable',
+            'void',
+            'object',
+            'null',
+            'false',
+            'mixed',
+            'never',
+            'true',
         ];
 
         $lowerType = strtolower($type);
@@ -309,5 +322,14 @@ final class BuilderHelpers
     public static function addModifier(int $modifiers, int $modifier) : int {
         Stmt\Class_::verifyModifier($modifiers, $modifier);
         return $modifiers | $modifier;
+    }
+
+    /**
+     * Adds a modifier and returns new modifier bitmask.
+     * @return int New modifiers
+     */
+    public static function addClassModifier(int $existingModifiers, int $modifierToSet) : int {
+        Stmt\Class_::verifyClassModifier($existingModifiers, $modifierToSet);
+        return $existingModifiers | $modifierToSet;
     }
 }

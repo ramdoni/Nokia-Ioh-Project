@@ -1,13 +1,12 @@
-var compactable = require('./compactable');
+var configuration = require('../configuration');
 
 function restoreWithComponents(property) {
-  var descriptor = compactable[property.name];
+  var descriptor = configuration[property.name];
 
   if (descriptor && descriptor.shorthand) {
-    return descriptor.restore(property, compactable);
-  } else {
-    return property.value;
+    return descriptor.restore(property, configuration);
   }
+  return property.value;
 }
 
 module.exports = restoreWithComponents;

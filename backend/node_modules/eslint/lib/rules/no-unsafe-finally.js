@@ -9,32 +9,37 @@
 // Helpers
 //------------------------------------------------------------------------------
 
-const SENTINEL_NODE_TYPE_RETURN_THROW = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression)$/;
-const SENTINEL_NODE_TYPE_BREAK = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression|DoWhileStatement|WhileStatement|ForOfStatement|ForInStatement|ForStatement|SwitchStatement)$/;
-const SENTINEL_NODE_TYPE_CONTINUE = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression|DoWhileStatement|WhileStatement|ForOfStatement|ForInStatement|ForStatement)$/;
+const SENTINEL_NODE_TYPE_RETURN_THROW = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression)$/u;
+const SENTINEL_NODE_TYPE_BREAK = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression|DoWhileStatement|WhileStatement|ForOfStatement|ForInStatement|ForStatement|SwitchStatement)$/u;
+const SENTINEL_NODE_TYPE_CONTINUE = /^(?:Program|(?:Function|Class)(?:Declaration|Expression)|ArrowFunctionExpression|DoWhileStatement|WhileStatement|ForOfStatement|ForInStatement|ForStatement)$/u;
 
 
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow control flow statements in `finally` blocks",
-            category: "Possible Errors",
+            description: "Disallow control flow statements in `finally` blocks",
             recommended: true,
-            url: "https://eslint.org/docs/rules/no-unsafe-finally"
+            url: "https://eslint.org/docs/latest/rules/no-unsafe-finally"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            unsafeUsage: "Unsafe usage of {{nodeType}}."
+        }
     },
     create(context) {
 
         /**
          * Checks if the node is the finalizer of a TryStatement
-         *
-         * @param {ASTNode} node - node to check.
+         * @param {ASTNode} node node to check.
          * @returns {boolean} - true if the node is the finalizer of a TryStatement
          */
         function isFinallyBlock(node) {
@@ -43,9 +48,8 @@ module.exports = {
 
         /**
          * Climbs up the tree if the node is not a sentinel node
-         *
-         * @param {ASTNode} node - node to check.
-         * @param {string} label - label of the break or continue statement
+         * @param {ASTNode} node node to check.
+         * @param {string} label label of the break or continue statement
          * @returns {boolean} - return whether the node is a finally block or a sentinel node
          */
         function isInFinallyBlock(node, label) {
@@ -80,14 +84,13 @@ module.exports = {
 
         /**
          * Checks whether the possibly-unsafe statement is inside a finally block.
-         *
-         * @param {ASTNode} node - node to check.
+         * @param {ASTNode} node node to check.
          * @returns {void}
          */
         function check(node) {
             if (isInFinallyBlock(node, node.label)) {
                 context.report({
-                    message: "Unsafe usage of {{nodeType}}.",
+                    messageId: "unsafeUsage",
                     data: {
                         nodeType: node.type
                     },

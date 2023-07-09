@@ -2,6 +2,7 @@
 
 namespace Livewire\Controllers;
 
+use Illuminate\Http\Response;
 use Livewire\Livewire;
 use Illuminate\Support\Str;
 use Illuminate\Pipeline\Pipeline;
@@ -27,13 +28,32 @@ class HttpConnectionHandler extends ConnectionHandler
     public function applyPersistentMiddleware()
     {
         try {
+            $originalUrl = Livewire::originalUrl();
+
+            // If the original path was the root route, updated the original URL to have
+            // a suffix of '/' to ensure that the route matching works correctly when
+            // a prefix is used (such as running Laravel in a subdirectory).
+            if (Livewire::originalPath() == '/') {
+                $originalUrl .= '/';
+            }
+
             $request = $this->makeRequestFromUrlAndMethod(
-                Livewire::originalUrl(),
+                $originalUrl,
                 Livewire::originalMethod()
             );
         } catch (NotFoundHttpException $e) {
+
+            $originalUrl = Str::replaceFirst('/'.request('fingerprint')['locale'], '', Livewire::originalUrl());
+
+            // If the original path was the root route, updated the original URL to have
+            // a suffix of '/' to ensure that the route matching works correctly when
+            // a prefix is used (such as running Laravel in a subdirectory).
+            if (Livewire::originalPath() == request('fingerprint')['locale']) {
+                $originalUrl .= '/';
+            }
+
             $request = $this->makeRequestFromUrlAndMethod(
-                Str::replaceFirst(Livewire::originalUrl(), request('fingerprint')['locale'].'/', ''),
+                $originalUrl,
                 Livewire::originalMethod()
             );
         }
@@ -56,13 +76,18 @@ class HttpConnectionHandler extends ConnectionHandler
             ->send($request)
             ->through($filteredMiddleware)
             ->then(function() {
-                // noop
+                return new Response();
             });
     }
 
     protected function makeRequestFromUrlAndMethod($url, $method = 'GET')
     {
-        $request = Request::create($url, $method);
+        // Ensure the original script paths are passed into the fake request incase Laravel is running in a subdirectory
+        $request = Request::create($url, $method, [], [], [], [
+            'SCRIPT_NAME' => request()->server->get('SCRIPT_NAME'),
+            'SCRIPT_FILENAME' => request()->server->get('SCRIPT_FILENAME'),
+            'PHP_SELF' => request()->server->get('PHP_SELF'),
+        ]);
 
         if (request()->hasSession()) {
             $request->setLaravelSession(request()->session());

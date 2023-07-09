@@ -15,6 +15,10 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 class DataFormatter implements DataFormatterInterface
 {
+    public $cloner;
+
+    public $dumper;
+
     /**
      * DataFormatter constructor.
      */
@@ -78,6 +82,6 @@ class DataFormatter implements DataFormatterInterface
 
         $base = log($size) / log(1024);
         $suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
-        return $sign . round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+        return $sign . round(pow(1024, $base - floor($base)), $precision) . $suffixes[(int) floor($base)];
     }
 }

@@ -1,3 +1,8 @@
+# 5.0.0 - 2021-01-12
+
+- Changed: use PostCSS 7 API
+- Updated: Node support to 10.0.0 (major)
+
 # 4.0.1 - 2020-10-28
 
 - Fixed: Incorrect conversion of small-caps ([#15](https://github.com/postcss/postcss-font-variant/pull/15))

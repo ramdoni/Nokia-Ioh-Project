@@ -37,10 +37,10 @@
     transform: rotate(360deg);
     }
 }
-.table tr td,.table tr th{
+/* .table tr td,.table tr th{
     padding-top:3px;
     padding-bottom:3px;
-}
+} */
 .table-style1 tr td,
 .table-style1 tr th{
     padding-top:4px;
@@ -84,3 +84,4 @@ table#table_postpone thead tr th,
 table#table_approve thead tr th
 {color:#689a37 !important}
 table thead .sub_total {color: orange;font-size: 13px}
+.cursor-pointer {cursor: pointer;}

@@ -1,16 +1,19 @@
 /**
  * @fileoverview Rule to check for jsdoc presence.
  * @author Gyandeep Singh
+ * @deprecated in ESLint v5.10.0
  */
 "use strict";
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "require JSDoc comments",
-            category: "Stylistic Issues",
+            description: "Require JSDoc comments",
             recommended: false,
-            url: "https://eslint.org/docs/rules/require-jsdoc"
+            url: "https://eslint.org/docs/latest/rules/require-jsdoc"
         },
 
         schema: [
@@ -21,31 +24,44 @@ module.exports = {
                         type: "object",
                         properties: {
                             ClassDeclaration: {
-                                type: "boolean"
+                                type: "boolean",
+                                default: false
                             },
                             MethodDefinition: {
-                                type: "boolean"
+                                type: "boolean",
+                                default: false
                             },
                             FunctionDeclaration: {
-                                type: "boolean"
+                                type: "boolean",
+                                default: true
                             },
                             ArrowFunctionExpression: {
-                                type: "boolean"
+                                type: "boolean",
+                                default: false
                             },
                             FunctionExpression: {
-                                type: "boolean"
+                                type: "boolean",
+                                default: false
                             }
                         },
-                        additionalProperties: false
+                        additionalProperties: false,
+                        default: {}
                     }
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+
+        deprecated: true,
+        replacedBy: [],
+
+        messages: {
+            missingJSDocComment: "Missing JSDoc comment."
+        }
     },
 
     create(context) {
-        const source = context.getSourceCode();
+        const source = context.sourceCode;
         const DEFAULT_OPTIONS = {
             FunctionDeclaration: true,
             MethodDefinition: false,
@@ -53,7 +69,7 @@ module.exports = {
             ArrowFunctionExpression: false,
             FunctionExpression: false
         };
-        const options = Object.assign(DEFAULT_OPTIONS, context.options[0] && context.options[0].require || {});
+        const options = Object.assign(DEFAULT_OPTIONS, context.options[0] && context.options[0].require);
 
         /**
          * Report the error message
@@ -61,7 +77,7 @@ module.exports = {
          * @returns {void}
          */
         function report(node) {
-            context.report({ node, message: "Missing JSDoc comment." });
+            context.report({ node, messageId: "missingJSDocComment" });
         }
 
         /**

@@ -98,36 +98,36 @@ function formatFrom(source) {
   }
 
   if (typeof source == 'object') {
-    return override(DEFAULTS, source);
-  }
-
-  if (typeof source == 'object') {
-    return override(DEFAULTS, source);
+    return remapBreaks(override(DEFAULTS, source));
   }
 
   if (typeof source == 'string' && source == BEAUTIFY_ALIAS) {
-    return override(DEFAULTS, {
-      breaks: breaks(true),
-      indentBy: 2,
-      spaces: spaces(true)
-    });
+    return remapBreaks(
+      override(DEFAULTS, {
+        breaks: breaks(true),
+        indentBy: 2,
+        spaces: spaces(true)
+      })
+    );
   }
 
   if (typeof source == 'string' && source == KEEP_BREAKS_ALIAS) {
-    return override(DEFAULTS, {
-      breaks: {
-        afterAtRule: true,
-        afterBlockBegins: true,
-        afterBlockEnds: true,
-        afterComment: true,
-        afterRuleEnds: true,
-        beforeBlockEnds: true
-      }
-    });
+    return remapBreaks(
+      override(DEFAULTS, {
+        breaks: {
+          afterAtRule: true,
+          afterBlockBegins: true,
+          afterBlockEnds: true,
+          afterComment: true,
+          afterRuleEnds: true,
+          beforeBlockEnds: true
+        }
+      })
+    );
   }
 
   if (typeof source == 'string') {
-    return override(DEFAULTS, toHash(source));
+    return remapBreaks(override(DEFAULTS, toHash(source)));
   }
 
   return DEFAULTS;
@@ -136,7 +136,7 @@ function formatFrom(source) {
 function toHash(string) {
   return string
     .split(OPTION_SEPARATOR)
-    .reduce(function (accumulator, directive) {
+    .reduce(function(accumulator, directive) {
       var parts = directive.split(OPTION_NAME_VALUE_SEPARATOR);
       var name = parts[0];
       var value = parts[1];
@@ -158,7 +158,7 @@ function toHash(string) {
 function hashValuesToHash(string) {
   return string
     .split(HASH_VALUES_OPTION_SEPARATOR)
-    .reduce(function (accumulator, directive) {
+    .reduce(function(accumulator, directive) {
       var parts = directive.split(HASH_VALUES_NAME_VALUE_SEPARATOR);
       var name = parts[0];
       var value = parts[1];
@@ -169,44 +169,60 @@ function hashValuesToHash(string) {
     }, {});
 }
 
-
 function normalizeValue(value) {
   switch (value) {
-    case FALSE_KEYWORD_1:
-    case FALSE_KEYWORD_2:
-      return false;
-    case TRUE_KEYWORD_1:
-    case TRUE_KEYWORD_2:
-      return true;
-    default:
-      return value;
+  case FALSE_KEYWORD_1:
+  case FALSE_KEYWORD_2:
+    return false;
+  case TRUE_KEYWORD_1:
+  case TRUE_KEYWORD_2:
+    return true;
+  default:
+    return value;
   }
 }
 
 function mapBreakWith(value) {
   switch (value) {
-    case 'windows':
-    case 'crlf':
-    case BreakWith.CarriageReturnLineFeed:
-      return BreakWith.CarriageReturnLineFeed;
-    case 'unix':
-    case 'lf':
-    case BreakWith.LineFeed:
-      return BreakWith.LineFeed;
-    default:
-      return systemLineBreak;
+  case 'windows':
+  case 'crlf':
+  case BreakWith.CarriageReturnLineFeed:
+    return BreakWith.CarriageReturnLineFeed;
+  case 'unix':
+  case 'lf':
+  case BreakWith.LineFeed:
+    return BreakWith.LineFeed;
+  default:
+    return systemLineBreak;
   }
 }
 
 function mapIndentWith(value) {
   switch (value) {
-    case 'space':
-      return IndentWith.Space;
-    case 'tab':
-      return IndentWith.Tab;
-    default:
-      return value;
+  case 'space':
+    return IndentWith.Space;
+  case 'tab':
+    return IndentWith.Tab;
+  default:
+    return value;
   }
+}
+
+function remapBreaks(source) {
+  for (var key in Breaks) {
+    var breakName = Breaks[key];
+    var breakValue = source.breaks[breakName];
+
+    if (breakValue === true) {
+      source.breaks[breakName] = source.breakWith;
+    } else if (breakValue === false) {
+      source.breaks[breakName] = '';
+    } else {
+      source.breaks[breakName] = source.breakWith.repeat(parseInt(breakValue));
+    }
+  }
+
+  return source;
 }
 
 module.exports = {

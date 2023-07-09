@@ -264,8 +264,13 @@ optional_ellipsis:
     | T_ELLIPSIS                                            { $$ = true; }
 ;
 
+identifier_maybe_readonly:
+      identifier                                            { $$ = $1; }
+    | T_READONLY                                            { $$ = Node\Identifier[$1]; }
+;
+
 function_declaration_statement:
-    T_FUNCTION optional_ref identifier '(' parameter_list ')' optional_return_type '{' inner_statement_list '}'
+    T_FUNCTION optional_ref identifier_maybe_readonly '(' parameter_list ')' optional_return_type '{' inner_statement_list '}'
         { $$ = Stmt\Function_[$3, ['byRef' => $2, 'params' => $5, 'returnType' => $7, 'stmts' => $9]]; }
 ;
 
@@ -689,9 +694,7 @@ array_expr:
 
 scalar_dereference:
       array_expr '[' dim_offset ']'                         { $$ = Expr\ArrayDimFetch[$1, $3]; }
-    | T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'
-          { $attrs = attributes(); $attrs['kind'] = strKind($1);
-            $$ = Expr\ArrayDimFetch[new Scalar\String_(Scalar\String_::parse($1), $attrs), $3]; }
+    | T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'         { $$ = Expr\ArrayDimFetch[Scalar\String_::fromString($1, attributes()), $3]; }
     | constant '[' dim_offset ']'                           { $$ = Expr\ArrayDimFetch[$1, $3]; }
     | scalar_dereference '[' dim_offset ']'                 { $$ = Expr\ArrayDimFetch[$1, $3]; }
     /* alternative array syntax missing intentionally */
@@ -723,8 +726,13 @@ lexical_var:
       optional_ref plain_variable                           { $$ = Expr\ClosureUse[$2, $1]; }
 ;
 
+name_readonly:
+      T_READONLY                                            { $$ = Name[$1]; }
+;
+
 function_call:
       name argument_list                                    { $$ = Expr\FuncCall[$1, $2]; }
+    | name_readonly argument_list                           { $$ = Expr\FuncCall[$1, $2]; }
     | class_name_or_var T_PAAMAYIM_NEKUDOTAYIM identifier_ex argument_list
           { $$ = Expr\StaticCall[$1, $3, $4]; }
     | class_name_or_var T_PAAMAYIM_NEKUDOTAYIM '{' expr '}' argument_list
@@ -793,10 +801,8 @@ ctor_arguments:
 
 common_scalar:
       T_LNUMBER                                             { $$ = $this->parseLNumber($1, attributes(), true); }
-    | T_DNUMBER                                             { $$ = Scalar\DNumber[Scalar\DNumber::parse($1)]; }
-    | T_CONSTANT_ENCAPSED_STRING
-          { $attrs = attributes(); $attrs['kind'] = strKind($1);
-            $$ = new Scalar\String_(Scalar\String_::parse($1, false), $attrs); }
+    | T_DNUMBER                                             { $$ = Scalar\DNumber::fromString($1, attributes()); }
+    | T_CONSTANT_ENCAPSED_STRING                            { $$ = Scalar\String_::fromString($1, attributes(), false); }
     | T_LINE                                                { $$ = Scalar\MagicConst\Line[]; }
     | T_FILE                                                { $$ = Scalar\MagicConst\File[]; }
     | T_DIR                                                 { $$ = Scalar\MagicConst\Dir[]; }

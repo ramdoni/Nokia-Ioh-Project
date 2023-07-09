@@ -11,7 +11,7 @@
 
 /**
  * Gets the variable object of `arguments` which is defined implicitly.
- * @param {eslint-scope.Scope} scope - A scope to get.
+ * @param {eslint-scope.Scope} scope A scope to get.
  * @returns {eslint-scope.Variable} The found variable object.
  */
 function getVariableOfArguments(scope) {
@@ -30,7 +30,7 @@ function getVariableOfArguments(scope) {
         }
     }
 
-    /* istanbul ignore next : unreachable */
+    /* c8 ignore next */
     return null;
 }
 
@@ -41,8 +41,7 @@ function getVariableOfArguments(scope) {
  * - arguments[i]      .... true    // computed member access
  * - arguments[0]      .... true    // computed member access
  * - arguments.length  .... false   // normal member access
- *
- * @param {eslint-scope.Reference} reference - The reference to check.
+ * @param {eslint-scope.Reference} reference The reference to check.
  * @returns {boolean} `true` if the reference is not normal member access.
  */
 function isNotNormalMemberAccess(reference) {
@@ -60,41 +59,48 @@ function isNotNormalMemberAccess(reference) {
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "require rest parameters instead of `arguments`",
-            category: "ECMAScript 6",
+            description: "Require rest parameters instead of `arguments`",
             recommended: false,
-            url: "https://eslint.org/docs/rules/prefer-rest-params"
+            url: "https://eslint.org/docs/latest/rules/prefer-rest-params"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            preferRestParams: "Use the rest parameters instead of 'arguments'."
+        }
     },
 
     create(context) {
 
+        const sourceCode = context.sourceCode;
+
         /**
          * Reports a given reference.
-         *
-         * @param {eslint-scope.Reference} reference - A reference to report.
+         * @param {eslint-scope.Reference} reference A reference to report.
          * @returns {void}
          */
         function report(reference) {
             context.report({
                 node: reference.identifier,
                 loc: reference.identifier.loc,
-                message: "Use the rest parameters instead of 'arguments'."
+                messageId: "preferRestParams"
             });
         }
 
         /**
          * Reports references of the implicit `arguments` variable if exist.
-         *
+         * @param {ASTNode} node The node representing the function.
          * @returns {void}
          */
-        function checkForArguments() {
-            const argumentsVar = getVariableOfArguments(context.getScope());
+        function checkForArguments(node) {
+            const argumentsVar = getVariableOfArguments(sourceCode.getScope(node));
 
             if (argumentsVar) {
                 argumentsVar

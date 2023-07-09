@@ -174,7 +174,7 @@ class Factory
                 if ($response instanceof PromiseInterface) {
                     $options['on_stats'](new TransferStats(
                         $request->toPsrRequest(),
-                        $response->wait()
+                        $response->wait(),
                     ));
                 }
 

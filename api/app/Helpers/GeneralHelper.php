@@ -1,6 +1,18 @@
 <?php
 use Illuminate\Support\Str;
 
+function type_anggota($val)
+{
+    if($val==1) return "Anggota";
+    if($val==2) return "Non Anggota";
+}
+
+function str_replace_first($search, $replace, $subject)
+{
+    $search = '/'.preg_quote($search, '/').'/';
+    return preg_replace($search, $replace, $subject, 1);
+}
+
 function digiflazz($param){
     $username = env('DIGIFLAZZ_USERNAME');  
     $apiKey = env('DIGIFLAZZ_KEY_PROD');
@@ -53,6 +65,15 @@ function digiflazz($param){
     return $result;
 }
 
+function sinkronKoperasi($param)
+{
+    $param['token'] = get_setting('apps_token') ? get_setting('apps_token') : env('COOPZONE_TOKEN');
+    
+    $response = Http::post( ( get_setting('apps_url') ? get_setting('apps_url') : env('KOPERASI_URL')).'/api/sync', $param);
+
+    return $response;
+}
+
 function sinkronCoopzone($param)
 {
     $param['token'] = env('COOPZONE_TOKEN');
@@ -87,6 +108,9 @@ function status_transaksi($status){
         case 3:
           return "<span class=\"badge badge-danger\">Gagal</span>"; 
           break;
+        case 4:
+            return "<span class=\"badge badge-danger\">Void</span>"; 
+            break;
         default:
             return "<span class=\"badge badge-warning\">Batal</span>"; 
         break;
@@ -95,7 +119,7 @@ function status_transaksi($status){
 
 function metode_pembayaran($key=''){
 
-    if($key=='') return [1=>'SIMPANAN',2=>'SIMPANAN',3=>'BAYAR NANTI',4=>'TUNAI',5=>'COOPAY'];
+    if($key=='') return [1=>'SIMPANAN',2=>'SIMPANAN',3=>'BAYAR NANTI',4=>'TUNAI',5=>'COOPAY',7=>'KARTU KREDIT',8=>'KARTU DEBIT',9=>'TRANSFER'];
 
     switch($key){
         case 1:
@@ -115,6 +139,12 @@ function metode_pembayaran($key=''){
             break;
         case 6:
             return "PAYROLL";
+            break;
+        case 7:
+            return "KARTU KREDIT";
+            break;
+        case 8:
+            return "KARTU DEBIT";
             break;
         default:
             return 'TUNAI';
@@ -287,7 +317,7 @@ function hitung_umur($tanggal_lahir){
 
 function format_idr($number)
 {
-    return number_format($number,0,0,'.');
+    if(is_numeric($number)) return number_format($number,0,0,'.');
 }
 
 function get_setting($key,$absolute_path=false)

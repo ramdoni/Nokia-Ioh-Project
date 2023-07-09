@@ -10,25 +10,32 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "layout",
+
         docs: {
-            description: "disallow spacing between function identifiers and their applications (deprecated)",
-            category: "Stylistic Issues",
+            description: "Disallow spacing between function identifiers and their applications (deprecated)",
             recommended: false,
-            replacedBy: ["func-call-spacing"],
-            url: "https://eslint.org/docs/rules/no-spaced-func"
+            url: "https://eslint.org/docs/latest/rules/no-spaced-func"
         },
 
         deprecated: true,
 
+        replacedBy: ["func-call-spacing"],
+
         fixable: "whitespace",
-        schema: []
+        schema: [],
+
+        messages: {
+            noSpacedFunction: "Unexpected space between function name and paren."
+        }
     },
 
     create(context) {
 
-        const sourceCode = context.getSourceCode();
+        const sourceCode = context.sourceCode;
 
         /**
          * Check if open space is present in a function name
@@ -59,7 +66,7 @@ module.exports = {
                 context.report({
                     node,
                     loc: lastCalleeToken.loc.start,
-                    message: "Unexpected space between function name and paren.",
+                    messageId: "noSpacedFunction",
                     fix(fixer) {
                         return fixer.removeRange([prevToken.range[1], parenToken.range[0]]);
                     }

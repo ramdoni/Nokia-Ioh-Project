@@ -2,48 +2,61 @@
  Copyright 2012-2015, Yahoo Inc.
  Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-"use strict";
+'use strict';
+const { ReportBase } = require('istanbul-lib-report');
 
-function TextSummaryReport(opts) {
-    opts = opts || {};
-    this.file = opts.file || null;
+class TextSummaryReport extends ReportBase {
+    constructor(opts) {
+        super();
+
+        opts = opts || {};
+        this.file = opts.file || null;
+    }
+
+    onStart(node, context) {
+        const summary = node.getCoverageSummary();
+        const cw = context.writer.writeFile(this.file);
+        const printLine = function(key) {
+            const str = lineForKey(summary, key);
+            const clazz = context.classForPercent(key, summary[key].pct);
+            cw.println(cw.colorize(str, clazz));
+        };
+
+        cw.println('');
+        cw.println(
+            '=============================== Coverage summary ==============================='
+        );
+        printLine('statements');
+        printLine('branches');
+        printLine('functions');
+        printLine('lines');
+        cw.println(
+            '================================================================================'
+        );
+        cw.close();
+    }
 }
 
 function lineForKey(summary, key) {
-    var metrics = summary[key],
-        skipped,
-        result;
+    const metrics = summary[key];
 
     key = key.substring(0, 1).toUpperCase() + key.substring(1);
     if (key.length < 12) {
         key += '                   '.substring(0, 12 - key.length);
     }
-    result = [key, ':', metrics.pct + '%', '(', metrics.covered + '/' + metrics.total, ')'].join(' ');
-    skipped = metrics.skipped;
+    const result = [
+        key,
+        ':',
+        metrics.pct + '%',
+        '(',
+        metrics.covered + '/' + metrics.total,
+        ')'
+    ].join(' ');
+    const skipped = metrics.skipped;
     if (skipped > 0) {
-        result += ', ' + skipped + ' ignored';
+        return result + ', ' + skipped + ' ignored';
     }
     return result;
 }
-
-TextSummaryReport.prototype.onStart = function (node, context) {
-    var summary = node.getCoverageSummary(),
-        cw,
-        printLine = function (key) {
-            var str = lineForKey(summary, key),
-                clazz = context.classForPercent(key, summary[key].pct);
-            cw.println(cw.colorize(str, clazz));
-        };
-
-    cw = context.writer.writeFile(this.file);
-    cw.println('');
-    cw.println('=============================== Coverage summary ===============================');
-    printLine('statements');
-    printLine('branches');
-    printLine('functions');
-    printLine('lines');
-    cw.println('================================================================================');
-    cw.close();
-};
 
 module.exports = TextSummaryReport;

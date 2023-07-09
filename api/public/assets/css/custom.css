@@ -44,9 +44,24 @@
     /* border-bottom: dashed 1px #0088cc; */
 }
 .theme-blue .page-loader-wrapper {background-color: white !important;color:black !important}
-
+.badge {
+    line-height: 10px;
+}
 .badge.badge-success.badge-active {background:#22af46;color:white}
 .badge.badge-danger.badge-active {background:#DE484C;color:white}
 .badge.badge-warning.badge-active {background:#f3ad06;color:white}
 .badge.badge-info.badge-active {background:#3C89DA;color:white}
 .badge.badge-primary.badge-active {background:#007bff;color:white}
+
+.show-form-filter{
+    position: absolute;
+    transform: translate3d(15px, 35px, 0px);
+    top: 0px;
+    left: 0px;
+    will-change: transform;
+    display: block;
+    width: 250px;
+}
+.mr-20 {
+    margin-right: 20px;
+}

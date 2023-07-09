@@ -67,11 +67,19 @@ class TwoFactorAuthenticationProvider implements TwoFactorAuthenticationProvider
      */
     public function verify($secret, $code)
     {
+        if (is_int($customWindow = config('fortify-options.two-factor-authentication.window'))) {
+            $this->engine->setWindow($customWindow);
+        }
+
         $timestamp = $this->engine->verifyKeyNewer(
             $secret, $code, optional($this->cache)->get($key = 'fortify.2fa_codes.'.md5($code))
         );
 
         if ($timestamp !== false) {
+            if ($timestamp === true) {
+                $timestamp = $this->engine->getTimestamp();
+            }
+
             optional($this->cache)->put($key, $timestamp, ($this->engine->getWindow() ?: 1) * 60);
 
             return true;

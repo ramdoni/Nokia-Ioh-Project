@@ -1,9 +1,8 @@
 /**
  * @fileoverview Rule to check for properties whose identifier ends with the string Sync
  * @author Matt DuVall<http://mattduvall.com/>
+ * @deprecated in ESLint v7.0.0
  */
-
-/* jshint node:true */
 
 "use strict";
 
@@ -11,13 +10,19 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        deprecated: true,
+
+        replacedBy: [],
+
+        type: "suggestion",
+
         docs: {
-            description: "disallow synchronous methods",
-            category: "Node.js and CommonJS",
+            description: "Disallow synchronous methods",
             recommended: false,
-            url: "https://eslint.org/docs/rules/no-sync"
+            url: "https://eslint.org/docs/latest/rules/no-sync"
         },
 
         schema: [
@@ -25,12 +30,17 @@ module.exports = {
                 type: "object",
                 properties: {
                     allowAtRootLevel: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: false
                     }
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+
+        messages: {
+            noSync: "Unexpected sync method: '{{propertyName}}'."
+        }
     },
 
     create(context) {
@@ -42,7 +52,7 @@ module.exports = {
             [selector](node) {
                 context.report({
                     node,
-                    message: "Unexpected sync method: '{{propertyName}}'.",
+                    messageId: "noSync",
                     data: {
                         propertyName: node.property.name
                     }

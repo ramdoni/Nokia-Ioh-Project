@@ -53,15 +53,19 @@ function isLooped(node, parent) {
     }
 }
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow `await` inside of loops",
-            category: "Possible Errors",
+            description: "Disallow `await` inside of loops",
             recommended: false,
-            url: "https://eslint.org/docs/rules/no-await-in-loop"
+            url: "https://eslint.org/docs/latest/rules/no-await-in-loop"
         },
+
         schema: [],
+
         messages: {
             unexpectedAwait: "Unexpected `await` inside a loop."
         }

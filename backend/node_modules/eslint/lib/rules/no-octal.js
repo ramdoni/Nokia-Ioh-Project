@@ -9,16 +9,22 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "disallow octal literals",
-            category: "Best Practices",
+            description: "Disallow octal literals",
             recommended: true,
-            url: "https://eslint.org/docs/rules/no-octal"
+            url: "https://eslint.org/docs/latest/rules/no-octal"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            noOctal: "Octal literals should not be used."
+        }
     },
 
     create(context) {
@@ -26,8 +32,11 @@ module.exports = {
         return {
 
             Literal(node) {
-                if (typeof node.value === "number" && /^0[0-7]/.test(node.raw)) {
-                    context.report({ node, message: "Octal literals should not be used." });
+                if (typeof node.value === "number" && /^0[0-9]/u.test(node.raw)) {
+                    context.report({
+                        node,
+                        messageId: "noOctal"
+                    });
                 }
             }
         };

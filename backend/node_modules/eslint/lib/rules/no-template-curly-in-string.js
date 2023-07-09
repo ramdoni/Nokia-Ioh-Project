@@ -8,27 +8,33 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
-            description: "disallow template literal placeholder syntax in regular strings",
-            category: "Possible Errors",
+            description: "Disallow template literal placeholder syntax in regular strings",
             recommended: false,
-            url: "https://eslint.org/docs/rules/no-template-curly-in-string"
+            url: "https://eslint.org/docs/latest/rules/no-template-curly-in-string"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            unexpectedTemplateExpression: "Unexpected template string expression."
+        }
     },
 
     create(context) {
-        const regex = /\$\{[^}]+\}/;
+        const regex = /\$\{[^}]+\}/u;
 
         return {
             Literal(node) {
                 if (typeof node.value === "string" && regex.test(node.value)) {
                     context.report({
                         node,
-                        message: "Unexpected template string expression."
+                        messageId: "unexpectedTemplateExpression"
                     });
                 }
             }

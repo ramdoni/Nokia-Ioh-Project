@@ -1,4 +1,4 @@
-var compactable = require('../compactable');
+var configuration = require('../../configuration');
 
 function findComponentIn(shorthand, longhand) {
   var comparator = nameComparator(longhand);
@@ -7,7 +7,7 @@ function findComponentIn(shorthand, longhand) {
 }
 
 function nameComparator(to) {
-  return function (property) {
+  return function(property) {
     return to.name === property.name;
   };
 }
@@ -21,7 +21,7 @@ function findInSubComponents(shorthand, comparator) {
   var longhandMatch;
   var i, l;
 
-  if (!compactable[shorthand.name].shorthandComponents) {
+  if (!configuration[shorthand.name].shorthandComponents) {
     return;
   }
 
@@ -33,8 +33,6 @@ function findInSubComponents(shorthand, comparator) {
       return longhandMatch;
     }
   }
-
-  return;
 }
 
 module.exports = findComponentIn;

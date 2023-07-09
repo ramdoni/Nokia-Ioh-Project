@@ -9,16 +9,21 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "require `for-in` loops to include an `if` statement",
-            category: "Best Practices",
+            description: "Require `for-in` loops to include an `if` statement",
             recommended: false,
-            url: "https://eslint.org/docs/rules/guard-for-in"
+            url: "https://eslint.org/docs/latest/rules/guard-for-in"
         },
 
-        schema: []
+        schema: [],
+        messages: {
+            wrap: "The body of a for-in should be wrapped in an if statement to filter unwanted properties from the prototype."
+        }
     },
 
     create(context) {
@@ -63,7 +68,7 @@ module.exports = {
                     }
                 }
 
-                context.report({ node, message: "The body of a for-in should be wrapped in an if statement to filter unwanted properties from the prototype." });
+                context.report({ node, messageId: "wrap" });
             }
         };
 

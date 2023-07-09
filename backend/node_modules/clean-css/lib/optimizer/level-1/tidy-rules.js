@@ -9,12 +9,24 @@ var DOUBLE_QUOTE_PATTERN = /="([a-zA-Z][a-zA-Z\d\-_]+)"(\s|\])/g;
 var HTML_COMMENT_PATTERN = /^(?:(?:<!--|-->)\s*)+/;
 var SINGLE_QUOTE_CASE_PATTERN = /='([a-zA-Z][a-zA-Z\d\-_]+)'([iI])/g;
 var SINGLE_QUOTE_PATTERN = /='([a-zA-Z][a-zA-Z\d\-_]+)'(\s|\])/g;
-var RELATION_PATTERN = /[>\+~]/;
+var RELATION_PATTERN = /[>+~]/;
 var WHITESPACE_PATTERN = /\s/;
 
 var ASTERISK_PLUS_HTML_HACK = '*+html ';
 var ASTERISK_FIRST_CHILD_PLUS_HTML_HACK = '*:first-child+html ';
 var LESS_THAN = '<';
+
+var PSEUDO_CLASSES_WITH_SELECTORS = [
+  ':current',
+  ':future',
+  ':has',
+  ':host',
+  ':host-context',
+  ':is',
+  ':not',
+  ':past',
+  ':where'
+];
 
 function hasInvalidCharacters(value) {
   var isEscaped;
@@ -30,7 +42,12 @@ function hasInvalidCharacters(value) {
       // continue as always
     } else if (character == Marker.SINGLE_QUOTE || character == Marker.DOUBLE_QUOTE) {
       isQuote = !isQuote;
-    } else if (!isQuote && (character == Marker.CLOSE_CURLY_BRACKET || character == Marker.EXCLAMATION || character == LESS_THAN || character == Marker.SEMICOLON)) {
+    } else if (!isQuote
+      && (character == Marker.CLOSE_CURLY_BRACKET
+        || character == Marker.EXCLAMATION
+        || character == LESS_THAN
+        || character == Marker.SEMICOLON)
+    ) {
       isInvalid = true;
       break;
     } else if (!isQuote && i === 0 && RELATION_PATTERN.test(character)) {
@@ -57,7 +74,9 @@ function removeWhitespace(value, format) {
   var isAttribute;
   var isRelation;
   var isWhitespace;
+  var isSpaceAwarePseudoClass;
   var roundBracketLevel = 0;
+  var wasComma = false;
   var wasRelation = false;
   var wasWhitespace = false;
   var withCaseAttribute = CASE_ATTRIBUTE_PATTERN.test(value);
@@ -72,6 +91,10 @@ function removeWhitespace(value, format) {
     isQuoted = isSingleQuoted || isDoubleQuoted;
     isRelation = !isAttribute && !isEscaped && roundBracketLevel === 0 && RELATION_PATTERN.test(character);
     isWhitespace = WHITESPACE_PATTERN.test(character);
+    isSpaceAwarePseudoClass = roundBracketLevel == 1 && character == Marker.CLOSE_ROUND_BRACKET
+      ? false
+      : isSpaceAwarePseudoClass
+        || (roundBracketLevel === 0 && character == Marker.COLON && isPseudoClassWithSelectors(value, i));
 
     if (wasEscaped && isQuoted && isNewLineWin) {
       // swallow escaped new windows lines in comments
@@ -111,6 +134,10 @@ function removeWhitespace(value, format) {
     } else if (!isWhitespace && wasRelation && spaceAroundRelation) {
       stripped.push(Marker.SPACE);
       stripped.push(character);
+    } else if (isWhitespace && !wasWhitespace && wasComma && roundBracketLevel > 0 && isSpaceAwarePseudoClass) {
+      // skip space
+    } else if (isWhitespace && !wasWhitespace && roundBracketLevel > 0 && isSpaceAwarePseudoClass) {
+      stripped.push(character);
     } else if (isWhitespace && (isAttribute || roundBracketLevel > 0) && !isQuoted) {
       // skip space
     } else if (isWhitespace && wasWhitespace && !isQuoted) {
@@ -133,11 +160,18 @@ function removeWhitespace(value, format) {
     isEscaped = character == Marker.BACK_SLASH;
     wasRelation = isRelation;
     wasWhitespace = isWhitespace;
+    wasComma = character == Marker.COMMA;
   }
 
-  return withCaseAttribute ?
-    stripped.join('').replace(CASE_RESTORE_PATTERN, '$1 $2]') :
-    stripped.join('');
+  return withCaseAttribute
+    ? stripped.join('').replace(CASE_RESTORE_PATTERN, '$1 $2]')
+    : stripped.join('');
+}
+
+function isPseudoClassWithSelectors(value, colonPosition) {
+  var pseudoClass = value.substring(colonPosition, value.indexOf(Marker.OPEN_ROUND_BRACKET, colonPosition));
+
+  return PSEUDO_CLASSES_WITH_SELECTORS.indexOf(pseudoClass) > -1;
 }
 
 function removeQuotes(value) {
@@ -150,6 +184,22 @@ function removeQuotes(value) {
     .replace(SINGLE_QUOTE_PATTERN, '=$1$2')
     .replace(DOUBLE_QUOTE_CASE_PATTERN, '=$1 $2')
     .replace(DOUBLE_QUOTE_PATTERN, '=$1$2');
+}
+
+function replacePseudoClasses(value) {
+  return value
+    .replace('nth-child(1)', 'first-child')
+    .replace('nth-of-type(1)', 'first-of-type')
+    .replace('nth-of-type(even)', 'nth-of-type(2n)')
+    .replace('nth-child(even)', 'nth-child(2n)')
+    .replace('nth-of-type(2n+1)', 'nth-of-type(odd)')
+    .replace('nth-child(2n+1)', 'nth-child(odd)')
+    .replace('nth-last-child(1)', 'last-child')
+    .replace('nth-last-of-type(1)', 'last-of-type')
+    .replace('nth-last-of-type(even)', 'nth-last-of-type(2n)')
+    .replace('nth-last-child(even)', 'nth-last-child(2n)')
+    .replace('nth-last-of-type(2n+1)', 'nth-last-of-type(odd)')
+    .replace('nth-last-child(2n+1)', 'nth-last-child(odd)');
 }
 
 function tidyRules(rules, removeUnsupported, adjacentSpace, format, warnings) {
@@ -189,13 +239,15 @@ function tidyRules(rules, removeUnsupported, adjacentSpace, format, warnings) {
 
     if (reduced.indexOf('*') > -1) {
       reduced = reduced
-        .replace(/\*([:#\.\[])/g, '$1')
-        .replace(/^(\:first\-child)?\+html/, '*$1+html');
+        .replace(/\*([:#.[])/g, '$1')
+        .replace(/^(:first-child)?\+html/, '*$1+html');
     }
 
     if (repeated.indexOf(reduced) > -1) {
       continue;
     }
+
+    reduced = replacePseudoClasses(reduced);
 
     rule[1] = reduced;
     repeated.push(reduced);

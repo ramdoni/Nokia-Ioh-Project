@@ -19,7 +19,7 @@ class SyncProduct extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sinkron produk koperasi ke coopzone';
 
     /**
      * Create a new command instance.
@@ -53,7 +53,6 @@ class SyncProduct extends Command
             ]);
             
             echo "Status : ". $response->status()."\n-----------------------------------\n\n";
-
         }
     }
 }

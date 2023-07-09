@@ -1,8 +1,6 @@
 /**
- * Clean-css - https://github.com/jakubpawlowicz/clean-css
+ * Clean-css - https://github.com/clean-css/clean-css
  * Released under the terms of MIT license
- *
- * Copyright (C) 2017 JakubPawlowicz.com
  */
 
 var level0Optimize = require('./optimizer/level-0/optimize');
@@ -18,6 +16,7 @@ var inlineRequestFrom = require('./options/inline-request');
 var inlineTimeoutFrom = require('./options/inline-timeout');
 var OptimizationLevel = require('./options/optimization-level').OptimizationLevel;
 var optimizationLevelFrom = require('./options/optimization-level').optimizationLevelFrom;
+var pluginsFrom = require('./options/plugins');
 var rebaseFrom = require('./options/rebase');
 var rebaseToFrom = require('./options/rebase-to');
 
@@ -31,14 +30,17 @@ var CleanCSS = module.exports = function CleanCSS(options) {
   options = options || {};
 
   this.options = {
+    batch: !!options.batch,
     compatibility: compatibilityFrom(options.compatibility),
+    explicitRebaseTo: 'rebaseTo' in options,
     fetch: fetchFrom(options.fetch),
     format: formatFrom(options.format),
     inline: inlineFrom(options.inline),
     inlineRequest: inlineRequestFrom(options.inlineRequest),
     inlineTimeout: inlineTimeoutFrom(options.inlineTimeout),
     level: optimizationLevelFrom(options.level),
-    rebase: rebaseFrom(options.rebase),
+    plugins: pluginsFrom(options.plugins),
+    rebase: rebaseFrom(options.rebase, options.rebaseTo),
     rebaseTo: rebaseToFrom(options.rebaseTo),
     returnPromise: !!options.returnPromise,
     sourceMap: !!options.sourceMap,
@@ -46,14 +48,15 @@ var CleanCSS = module.exports = function CleanCSS(options) {
   };
 };
 
-
 // for compatibility with optimize-css-assets-webpack-plugin
-CleanCSS.process = function (input, opts) {
+CleanCSS.process = function(input, opts) {
   var cleanCss;
   var optsTo = opts.to;
 
   delete opts.to;
-  cleanCss = new CleanCSS(Object.assign({ returnPromise: true, rebaseTo: optsTo }, opts));
+  cleanCss = new CleanCSS(Object.assign({
+    returnPromise: true, rebaseTo: optsTo
+  }, opts));
 
   return cleanCss.minify(input)
     .then(function(output) {
@@ -61,30 +64,91 @@ CleanCSS.process = function (input, opts) {
     });
 };
 
-
-CleanCSS.prototype.minify = function (input, maybeSourceMap, maybeCallback) {
+CleanCSS.prototype.minify = function(input, maybeSourceMap, maybeCallback) {
   var options = this.options;
 
   if (options.returnPromise) {
-    return new Promise(function (resolve, reject) {
-      minify(input, options, maybeSourceMap, function (errors, output) {
-        return errors ?
-          reject(errors) :
-          resolve(output);
+    return new Promise(function(resolve, reject) {
+      minifyAll(input, options, maybeSourceMap, function(errors, output) {
+        return errors
+          ? reject(errors)
+          : resolve(output);
       });
     });
-  } else {
-    return minify(input, options, maybeSourceMap, maybeCallback);
   }
+  return minifyAll(input, options, maybeSourceMap, maybeCallback);
 };
 
+function minifyAll(input, options, maybeSourceMap, maybeCallback) {
+  if (options.batch && Array.isArray(input)) {
+    return minifyInBatchesFromArray(input, options, maybeSourceMap, maybeCallback);
+  } if (options.batch && (typeof input == 'object')) {
+    return minifyInBatchesFromHash(input, options, maybeSourceMap, maybeCallback);
+  }
+  return minify(input, options, maybeSourceMap, maybeCallback);
+}
+
+function minifyInBatchesFromArray(input, options, maybeSourceMap, maybeCallback) {
+  var callback = typeof maybeCallback == 'function'
+    ? maybeCallback
+    : (typeof maybeSourceMap == 'function' ? maybeSourceMap : null);
+  var errors = [];
+  var outputAsHash = {};
+  var inputValue;
+  var i, l;
+
+  function whenHashBatchDone(innerErrors, output) {
+    outputAsHash = Object.assign(outputAsHash, output);
+
+    if (innerErrors !== null) {
+      errors = errors.concat(innerErrors);
+    }
+  }
+
+  for (i = 0, l = input.length; i < l; i++) {
+    if (typeof input[i] == 'object') {
+      minifyInBatchesFromHash(input[i], options, whenHashBatchDone);
+    } else {
+      inputValue = input[i];
+
+      outputAsHash[inputValue] = minify([inputValue], options);
+      errors = errors.concat(outputAsHash[inputValue].errors);
+    }
+  }
+
+  return callback
+    ? callback(errors.length > 0 ? errors : null, outputAsHash)
+    : outputAsHash;
+}
+
+function minifyInBatchesFromHash(input, options, maybeSourceMap, maybeCallback) {
+  var callback = typeof maybeCallback == 'function'
+    ? maybeCallback
+    : (typeof maybeSourceMap == 'function' ? maybeSourceMap : null);
+  var errors = [];
+  var outputAsHash = {};
+  var inputKey;
+  var inputValue;
+
+  for (inputKey in input) {
+    inputValue = input[inputKey];
+
+    outputAsHash[inputKey] = minify(inputValue.styles, options, inputValue.sourceMap);
+    errors = errors.concat(outputAsHash[inputKey].errors);
+  }
+
+  return callback
+    ? callback(errors.length > 0 ? errors : null, outputAsHash)
+    : outputAsHash;
+}
+
 function minify(input, options, maybeSourceMap, maybeCallback) {
-  var sourceMap = typeof maybeSourceMap != 'function' ?
-    maybeSourceMap :
-    null;
-  var callback = typeof maybeCallback == 'function' ?
-    maybeCallback :
-    (typeof maybeSourceMap == 'function' ? maybeSourceMap : null);
+  var sourceMap = typeof maybeSourceMap != 'function'
+    ? maybeSourceMap
+    : null;
+  var callback = typeof maybeCallback == 'function'
+    ? maybeCallback
+    : (typeof maybeSourceMap == 'function' ? maybeSourceMap : null);
   var context = {
     stats: {
       efficiency: 0,
@@ -93,9 +157,7 @@ function minify(input, options, maybeSourceMap, maybeCallback) {
       startedAt: Date.now(),
       timeSpent: 0
     },
-    cache: {
-      specificity: {}
-    },
+    cache: { specificity: {} },
     errors: [],
     inlinedStylesheets: [],
     inputSourceMapTracker: inputSourceMapTracker(),
@@ -106,24 +168,32 @@ function minify(input, options, maybeSourceMap, maybeCallback) {
     validator: validator(options.compatibility),
     warnings: []
   };
+  var implicitRebaseToWarning;
 
   if (sourceMap) {
     context.inputSourceMapTracker.track(undefined, sourceMap);
   }
 
-  return runner(context.localOnly)(function () {
-    return readSources(input, context, function (tokens) {
-      var serialize = context.options.sourceMap ?
-        serializeStylesAndSourceMap :
-        serializeStyles;
+  if (options.rebase && !options.explicitRebaseTo) {
+    implicitRebaseToWarning = 'You have set `rebase: true` without giving `rebaseTo` option, which, in this case, defaults to the current working directory. '
+      + 'You are then warned this can lead to unexpected URL rebasing (aka here be dragons)! '
+      + 'If you are OK with the clean-css output, then you can get rid of this warning by giving clean-css a `rebaseTo: process.cwd()` option.';
+    context.warnings.push(implicitRebaseToWarning);
+  }
+
+  return runner(context.localOnly)(function() {
+    return readSources(input, context, function(tokens) {
+      var serialize = context.options.sourceMap
+        ? serializeStylesAndSourceMap
+        : serializeStyles;
 
       var optimizedTokens = optimize(tokens, context);
       var optimizedStyles = serialize(optimizedTokens, context);
       var output = withMetadata(optimizedStyles, context);
 
-      return callback ?
-        callback(context.errors.length > 0 ? context.errors : null, output) :
-        output;
+      return callback
+        ? callback(context.errors.length > 0 ? context.errors : null, output)
+        : output;
     });
   });
 }
@@ -131,21 +201,20 @@ function minify(input, options, maybeSourceMap, maybeCallback) {
 function runner(localOnly) {
   // to always execute code asynchronously when a callback is given
   // more at blog.izs.me/post/59142742143/designing-apis-for-asynchrony
-  return localOnly ?
-    function (callback) { return callback(); } :
-    process.nextTick;
+  return localOnly
+    ? function(callback) { return callback(); }
+    : process.nextTick;
 }
 
 function optimize(tokens, context) {
-  var optimized;
+  var optimized = level0Optimize(tokens, context);
 
-  optimized = level0Optimize(tokens, context);
-  optimized = OptimizationLevel.One in context.options.level ?
-    level1Optimize(tokens, context) :
-    tokens;
-  optimized = OptimizationLevel.Two in context.options.level ?
-    level2Optimize(tokens, context, true) :
-    optimized;
+  optimized = OptimizationLevel.One in context.options.level
+    ? level1Optimize(tokens, context)
+    : tokens;
+  optimized = OptimizationLevel.Two in context.options.level
+    ? level2Optimize(tokens, context, true)
+    : optimized;
 
   return optimized;
 }

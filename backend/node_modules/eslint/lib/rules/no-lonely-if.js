@@ -1,5 +1,5 @@
 /**
- * @fileoverview Rule to disallow if as the only statmenet in an else block
+ * @fileoverview Rule to disallow if as the only statement in an else block
  * @author Brandon Mills
  */
 "use strict";
@@ -8,28 +8,32 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
+/** @type {import('../shared/types').Rule} */
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
-            description: "disallow `if` statements as the only statement in `else` blocks",
-            category: "Stylistic Issues",
+            description: "Disallow `if` statements as the only statement in `else` blocks",
             recommended: false,
-            url: "https://eslint.org/docs/rules/no-lonely-if"
+            url: "https://eslint.org/docs/latest/rules/no-lonely-if"
         },
 
         schema: [],
+        fixable: "code",
 
-        fixable: "code"
+        messages: {
+            unexpectedLonelyIf: "Unexpected if as the only statement in an else block."
+        }
     },
 
     create(context) {
-        const sourceCode = context.getSourceCode();
+        const sourceCode = context.sourceCode;
 
         return {
             IfStatement(node) {
-                const ancestors = context.getAncestors(),
-                    parent = ancestors.pop(),
-                    grandparent = ancestors.pop();
+                const parent = node.parent,
+                    grandparent = parent.parent;
 
                 if (parent && parent.type === "BlockStatement" &&
                         parent.body.length === 1 && grandparent &&
@@ -37,7 +41,7 @@ module.exports = {
                         parent === grandparent.alternate) {
                     context.report({
                         node,
-                        message: "Unexpected if as the only statement in an else block.",
+                        messageId: "unexpectedLonelyIf",
                         fix(fixer) {
                             const openingElseCurly = sourceCode.getFirstToken(parent);
                             const closingElseCurly = sourceCode.getLastToken(parent);
@@ -57,7 +61,7 @@ module.exports = {
                                 node.consequent.type !== "BlockStatement" && lastIfToken.value !== ";" && tokenAfterElseBlock &&
                                 (
                                     node.consequent.loc.end.line === tokenAfterElseBlock.loc.start.line ||
-                                    /^[([/+`-]/.test(tokenAfterElseBlock.value) ||
+                                    /^[([/+`-]/u.test(tokenAfterElseBlock.value) ||
                                     lastIfToken.value === "++" ||
                                     lastIfToken.value === "--"
                                 )
