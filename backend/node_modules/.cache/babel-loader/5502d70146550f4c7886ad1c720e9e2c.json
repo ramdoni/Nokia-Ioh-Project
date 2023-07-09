@@ -1,1 +1,0 @@
-{"ast":null,"code":"/* eslint-env browser */\nmodule.exports = typeof self == 'object' ? self.FormData : window.FormData;","map":null,"metadata":{},"sourceType":"script"}
